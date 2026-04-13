@@ -321,38 +321,656 @@
   }
 
   /* ── INTERNAL OPENING BOOK ── */
-  const OPENING_BOOK = [
-    // Sicilian Defense
-    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Nb1c3', 'Nb8c6', 'g1f3', 'd7d6', 'd2d4', 'c5d4', 'Nb1d4'] },
-    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6'] },
-    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Nb1c3', 'Ng8f6', 'g1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4'] },
+ const OPENING_BOOK = [
+    // ============================================
+    // SICILIAN DEFENSE (1.e4 c5)
+    // ============================================
     
-    // French Defense
+    // Sicilian - Open Sicilian Main Line
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'e7e5'] },
+    
+    // Sicilian Najdorf
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6', 'Bc1e3'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6', 'Bf1e2'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6', 'f2f3'] },
+    
+    // Sicilian Dragon
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'g7g6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'g7g6', 'Bc1e3', 'Bf8g7', 'f2f3'] },
+    
+    // Sicilian Scheveningen
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'e7e6', 'Bc1e3'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'e7e6', 'f2f4'] },
+    
+    // Sicilian Sveshnikov
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'Nb8c6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'e7e5'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'Nb8c6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'e7e5', 'Nd4b5', 'd7d6'] },
+    
+    // Sicilian Kalashnikov
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'Nb8c6', 'd2d4', 'c5d4', 'Nf3d4', 'e7e5', 'Nd4b5', 'd7d6'] },
+    
+    // Sicilian Taimanov
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4', 'Nb8c6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4', 'Nb8c6', 'Nb1c3', 'Qd8c7'] },
+    
+    // Sicilian Kan
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4', 'a7a6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4', 'a7a6', 'Bf1d3'] },
+    
+    // Sicilian Classical
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'Nb8c6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'Nb8c6', 'Bf1c4'] },
+    
+    // Sicilian Closed
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Nb1c3', 'Nb8c6', 'g2g3', 'g7g6', 'Bf1g2', 'Bf8g7'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Nb1c3', 'Nb8c6', 'Ng1f3', 'e7e6', 'd2d4', 'c5d4', 'Nf3d4'] },
+    
+    // Sicilian Alapin (2.c3)
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'c2c3', 'd7d5', 'e4d5', 'Qd8d5', 'd2d4'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'c2c3', 'Ng8f6', 'e4e5', 'Nf6d5', 'd2d4'] },
+    
+    // Sicilian Smith-Morra Gambit
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'd2d4', 'c5d4', 'c2c3', 'd4c3', 'Nb1c3'] },
+    
+    // Sicilian Grand Prix Attack
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'f2f4', 'd7d5', 'e4d5', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Nb1c3', 'Nb8c6', 'f2f4', 'g7g6', 'Ng1f3'] },
+    
+    // Sicilian Rossolimo
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'Nb8c6', 'Bf1b5'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'g7g6'] },
+    
+    // Sicilian Moscow Variation
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'Bf1b5'] },
+    
+    // ============================================
+    // FRENCH DEFENSE (1.e4 e6)
+    // ============================================
+    
+    // French Winawer
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Bf8b4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Bf8b4', 'e4e5', 'c7c5', 'a2a3', 'Bb4c3', 'b2c3'] },
+    
+    // French Classical
     { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Ng8f6', 'Bc1g5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Ng8f6', 'e4e5', 'Nf6d7'] },
+    
+    // French Tarrasch
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1d2'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1d2', 'Ng8f6', 'e4e5', 'Nf6d7', 'Bf1d3', 'c7c5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1d2', 'c7c5', 'e4d5', 'e6d5'] },
+    
+    // French Advance
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'e4e5', 'c7c5', 'c2c3', 'Nb8c6', 'Ng1f3'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'e4e5', 'c7c5', 'c2c3', 'Qd8b6'] },
     { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'e4e5', 'Nb8c6', 'Nb1c3', 'Ng8f6'] },
     
-    // Caro-Kann Defense
+    // French Exchange
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'e4d5', 'e6d5', 'Ng1f3', 'Ng8f6', 'Bf1d3'] },
+    
+    // French Rubinstein
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4'] },
+    
+    // ============================================
+    // CARO-KANN DEFENSE (1.e4 c6)
+    // ============================================
+    
+    // Caro-Kann Classical
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4', 'Bc8f5'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4', 'Bc8f5', 'Ne4g3', 'Bf5g6'] },
+    
+    // Caro-Kann Modern/Two Knights
     { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4', 'Ng8f6'] },
-    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4e5', 'Bf8e7', 'g1f3', 'Nb8d7'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4', 'Ng8f6', 'Ne4f6', 'e7f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4', 'Nb8d7'] },
     
-    // London System
-    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Ng1f3', 'Ng8f6', 'Bc1f4', 'e7e6', 'e2e3', 'c7c5'] },
+    // Caro-Kann Advance
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4e5', 'Bc8f5', 'Ng1f3', 'e7e6', 'Bf1e2'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4e5', 'Bc8f5', 'Nb1c3', 'e7e6', 'g2g4'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4e5', 'Bf8e7', 'Ng1f3', 'Nb8d7'] },
     
-    // Italian Game
-    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5'] },
+    // Caro-Kann Exchange
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4d5', 'c6d5', 'Bf1d3', 'Nb8c6', 'c2c3'] },
     
-    // Ruy Lopez
+    // Caro-Kann Panov-Botvinnik Attack
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4d5', 'c6d5', 'c2c4', 'Ng8f6', 'Nb1c3'] },
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4d5', 'c6d5', 'c2c4', 'Ng8f6', 'Nb1c3', 'e7e6'] },
+    
+    // Caro-Kann Two Knights
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'Ng1f3', 'd7d5', 'Nb1c3', 'd5e4', 'Nc3e4'] },
+    
+    // ============================================
+    // RUY LOPEZ / SPANISH (1.e4 e5 2.Nf3 Nc6 3.Bb5)
+    // ============================================
+    
+    // Ruy Lopez Main Line
     { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1'] },
     
-    // Queen's Gambit
+    // Ruy Lopez Morphy Defense
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7', 'Rf1e1', 'b7b5', 'Ba4b3'] },
+    
+    // Ruy Lopez Closed
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7', 'Rf1e1', 'b7b5', 'Ba4b3', 'd7d6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7', 'Rf1e1', 'b7b5', 'Ba4b3', 'd7d6', 'c2c3', 'e8g8'] },
+    
+    // Ruy Lopez Marshall Attack
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7', 'Rf1e1', 'b7b5', 'Ba4b3', 'e8g8', 'c2c3', 'd7d5'] },
+    
+    // Ruy Lopez Berlin Defense
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'Ng8f6', 'e1g1', 'Nf6e4'] },
+    
+    // Ruy Lopez Exchange
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5c6', 'd7c6'] },
+    
+    // Ruy Lopez Schliemann/Jaenisch Gambit
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'f7f5'] },
+    
+    // Ruy Lopez Classical
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'Bf8c5'] },
+    
+    // ============================================
+    // ITALIAN GAME (1.e4 e5 2.Nf3 Nc6 3.Bc4)
+    // ============================================
+    
+    // Italian Giuoco Piano
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'c2c3', 'Ng8f6', 'd2d4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'd2d3', 'Ng8f6', 'e1g1'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'c2c3', 'Ng8f6', 'd2d4', 'e5d4', 'c3d4'] },
+    
+    // Italian Evans Gambit
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'b2b4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'b2b4', 'Bc5b4', 'c2c3', 'Bb4a5'] },
+    
+    // Italian Two Knights Defense
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Ng8f6', 'Nf3g5', 'd7d5', 'e4d5', 'Nc6a5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Ng8f6', 'd2d4', 'e5d4', 'e1g1'] },
+    
+    // Italian Giuoco Pianissimo
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1c4', 'Bf8c5', 'd2d3', 'Ng8f6', 'c2c3'] },
+    
+    // ============================================
+    // SCOTCH GAME (1.e4 e5 2.Nf3 Nc6 3.d4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'd2d4', 'e5d4', 'Nf3d4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'd2d4', 'e5d4', 'Nf3d4', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'd2d4', 'e5d4', 'Nf3d4', 'Bf8c5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'd2d4', 'e5d4', 'Bf1c4'] }, // Scotch Gambit
+    
+    // ============================================
+    // FOUR KNIGHTS GAME
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Nb1c3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Nb1c3', 'Ng8f6', 'Bf1b5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Nb1c3', 'Ng8f6', 'd2d4'] },
+    
+    // ============================================
+    // PETROV / RUSSIAN DEFENSE (1.e4 e5 2.Nf3 Nf6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Ng8f6', 'Nf3e5', 'd7d6', 'Ne5f3', 'Nf6e4', 'd2d4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Ng8f6', 'd2d4', 'Nf6e4', 'Bf1d3'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Ng8f6', 'Nf3e5', 'd7d6', 'Ne5f3', 'Nf6e4', 'Qd1e2'] },
+    
+    // ============================================
+    // PHILIDOR DEFENSE (1.e4 e5 2.Nf3 d6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'd7d6', 'd2d4', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'd7d6', 'd2d4', 'Nb8d7'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'd7d6', 'Bf1c4', 'Bf8e7', 'd2d4'] },
+    
+    // ============================================
+    // VIENNA GAME (1.e4 e5 2.Nc3)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Nb1c3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Nb1c3', 'Nb8c6', 'Bf1c4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Nb1c3', 'Ng8f6', 'f2f4'] }, // Vienna Gambit
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Nb1c3', 'Ng8f6', 'Bf1c4', 'Nf6e4'] },
+    
+    // ============================================
+    // KING'S GAMBIT (1.e4 e5 2.f4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'Ng1f3'] }, // King's Knight Gambit
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'Ng1f3', 'g7g5'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'Bf1c4'] }, // Bishop's Gambit
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4', 'Bf8c5'] }, // King's Gambit Declined
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'f2f4', 'd7d5'] }, // Falkbeer Counter Gambit
+    
+    // ============================================
+    // BISHOP'S OPENING (1.e4 e5 2.Bc4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Bf1c4', 'Ng8f6', 'd2d3', 'Nb8c6'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Bf1c4', 'Bf8c5', 'Ng1f3'] },
+    
+    // ============================================
+    // CENTER GAME (1.e4 e5 2.d4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'd2d4', 'e5d4', 'Qd1d4', 'Nb8c6', 'Qd4e3'] },
+    
+    // ============================================
+    // PIRC DEFENSE (1.e4 d6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'd7d6', 'd2d4', 'Ng8f6', 'Nb1c3', 'g7g6'] },
+    { fen: START_FEN, moves: ['e2e4', 'd7d6', 'd2d4', 'Ng8f6', 'Nb1c3', 'g7g6', 'Ng1f3', 'Bf8g7', 'Bf1e2', 'e8g8'] },
+    { fen: START_FEN, moves: ['e2e4', 'd7d6', 'd2d4', 'Ng8f6', 'Nb1c3', 'g7g6', 'f2f4'] }, // Austrian Attack
+    { fen: START_FEN, moves: ['e2e4', 'd7d6', 'd2d4', 'Ng8f6', 'Nb1c3', 'g7g6', 'Bc1e3'] },
+    
+    // ============================================
+    // MODERN DEFENSE (1.e4 g6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'g7g6', 'd2d4', 'Bf8g7', 'Nb1c3', 'd7d6', 'Ng1f3'] },
+    { fen: START_FEN, moves: ['e2e4', 'g7g6', 'd2d4', 'Bf8g7', 'Nb1c3', 'c7c6'] },
+    { fen: START_FEN, moves: ['e2e4', 'g7g6', 'd2d4', 'Bf8g7', 'Ng1f3', 'd7d6', 'Bf1e2'] },
+    
+    // ============================================
+    // ALEKHINE DEFENSE (1.e4 Nf6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'Ng8f6', 'e4e5', 'Nf6d5', 'd2d4', 'd7d6', 'Ng1f3'] },
+    { fen: START_FEN, moves: ['e2e4', 'Ng8f6', 'e4e5', 'Nf6d5', 'd2d4', 'd7d6', 'c2c4', 'Nd5b6', 'e5d6'] },
+    { fen: START_FEN, moves: ['e2e4', 'Ng8f6', 'e4e5', 'Nf6d5', 'Nb1c3', 'Nd5c3', 'b2c3'] },
+    
+    // ============================================
+    // SCANDINAVIAN DEFENSE (1.e4 d5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'd7d5', 'e4d5', 'Qd8d5', 'Nb1c3', 'Qd5a5'] },
+    { fen: START_FEN, moves: ['e2e4', 'd7d5', 'e4d5', 'Qd8d5', 'Nb1c3', 'Qd5d6'] },
+    { fen: START_FEN, moves: ['e2e4', 'd7d5', 'e4d5', 'Ng8f6'] }, // Scandinavian Modern
+    { fen: START_FEN, moves: ['e2e4', 'd7d5', 'e4d5', 'Ng8f6', 'd2d4', 'Nf6d5'] },
+    
+    // ============================================
+    // QUEEN'S GAMBIT (1.d4 d5 2.c4)
+    // ============================================
+    
+    // QGD Orthodox
     { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Bc1g5', 'Bf8e7', 'e2e3'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Ng1f3', 'Bf8e7', 'Bc1g5'] },
     
-    // King's Indian Defense
+    // QGD Ragozin
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Ng1f3', 'Bf8b4'] },
+    
+    // QGD Vienna
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'Bf8b4'] },
+    
+    // QGD Tartakower
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Bc1g5', 'Bf8e7', 'e2e3', 'e8g8', 'Ng1f3', 'b7b6'] },
+    
+    // QGD Semi-Tarrasch
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Ng1f3', 'c7c5'] },
+    
+    // QGD Tarrasch
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'c7c5'] },
+    
+    // Queen's Gambit Accepted
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'd5c4'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'd5c4', 'Ng1f3', 'Ng8f6', 'e2e3', 'e7e6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'd5c4', 'e2e4', 'e7e5'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'd5c4', 'Ng1f3', 'a7a6'] },
+    
+    // Slav Defense
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'd5c4'] }, // Semi-Slav
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'e7e6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Ng1f3', 'Ng8f6', 'e2e3', 'Bc8f5'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Nb1c3', 'Ng8f6', 'e2e3'] },
+    
+    // Semi-Slav Meran
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'e7e6', 'e2e3', 'Nb8d7', 'Bf1d3', 'd5c4', 'Bd3c4', 'b7b5'] },
+    
+    // Semi-Slav Anti-Meran
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'c7c6', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'e7e6', 'Bc1g5'] },
+    
+    // QGD Albin Counter-Gambit
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e5'] },
+    
+    // QGD Chigorin
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'Nb8c6'] },
+    
+    // QGD Baltic Defense
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'Bc8f5'] },
+    
+    // ============================================
+    // KING'S INDIAN DEFENSE (1.d4 Nf6 2.c4 g6)
+    // ============================================
+    
+    // KID Classical
     { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'Ng1f3', 'e8g8', 'Bf1e2'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'Ng1f3', 'e8g8', 'Bf1e2', 'e7e5'] },
     
-    // English Opening
-    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Nb8c6', 'g1f3', 'Ng8f6'] },
-  ];
+    // KID Sämisch
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'f2f3'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'f2f3', 'e8g8', 'Bc1e3'] },
+    
+    // KID Four Pawns Attack
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'f2f4'] },
+    
+    // KID Fianchetto
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Ng1f3', 'Bf8g7', 'g2g3', 'e8g8', 'Bf1g2'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'g2g3', 'Bf8g7', 'Bf1g2', 'e8g8', 'Nb1c3', 'd7d6', 'Ng1f3'] },
+    
+    // KID Averbakh
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'Bf1e2', 'e8g8', 'Bc1g5'] },
+    
+    // ============================================
+    // NIMZO-INDIAN DEFENSE (1.d4 Nf6 2.c4 e6 3.Nc3 Bb4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'Qd1c2'] }, // Classical
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'e2e3', 'e8g8', 'Bf1d3'] }, // Rubinstein
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'Ng1f3'] }, // Kasparov
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'a2a3', 'Bb4c3', 'b2c3'] }, // Sämisch
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'Bc1g5'] }, // Leningrad
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'f2f3'] }, // Kmoch
+    
+    // ============================================
+    // QUEEN'S INDIAN DEFENSE (1.d4 Nf6 2.c4 e6 3.Nf3 b6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'b7b6'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'b7b6', 'g2g3', 'Bc8b7', 'Bf1g2'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'b7b6', 'a2a3'] }, // Petrosian
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'b7b6', 'Bc1g5'] },
+    
+    // ============================================
+    // BOGO-INDIAN DEFENSE (1.d4 Nf6 2.c4 e6 3.Nf3 Bb4+)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'Bf8b4'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'Bf8b4', 'Bc1d2'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Ng1f3', 'Bf8b4', 'Nb1d2'] },
+    
+    // ============================================
+    // CATALAN OPENING (1.d4 Nf6 2.c4 e6 3.g3)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'g2g3'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'g2g3', 'd7d5', 'Bf1g2'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'g2g3', 'd7d5', 'Bf1g2', 'Bf8e7', 'Ng1f3', 'e8g8'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'g2g3', 'd7d5', 'Bf1g2', 'd5c4'] }, // Open Catalan
+    
+    // ============================================
+    // GRÜNFELD DEFENSE (1.d4 Nf6 2.c4 g6 3.Nc3 d5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'd7d5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'd7d5', 'c4d5', 'Nf6d5', 'e2e4', 'Nd5c3', 'b2c3', 'Bf8g7'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'd7d5', 'Ng1f3', 'Bf8g7', 'Qd1b3'] }, // Russian System
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'd7d5', 'Bc1f4'] },
+    
+    // ============================================
+    // BENONI DEFENSE
+    // ============================================
+    
+    // Modern Benoni
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'c7c5', 'd4d5', 'e7e6', 'Nb1c3', 'e6d5', 'c4d5', 'd7d6'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'c7c5', 'd4d5', 'e7e6', 'Nb1c3', 'e6d5', 'c4d5', 'd7d6', 'e2e4', 'g7g6'] },
+    
+    // Benko Gambit
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'c7c5', 'd4d5', 'b7b5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'c7c5', 'd4d5', 'b7b5', 'c4b5', 'a7a6'] },
+    
+    // Czech Benoni
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'c7c5', 'd4d5', 'e7e5'] },
+    
+    // ============================================
+    // DUTCH DEFENSE (1.d4 f5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'f7f5'] },
+    { fen: START_FEN, moves: ['d2d4', 'f7f5', 'g2g3', 'Ng8f6', 'Bf1g2', 'e7e6', 'Ng1f3'] }, // Classical Dutch
+    { fen: START_FEN, moves: ['d2d4', 'f7f5', 'g2g3', 'Ng8f6', 'Bf1g2', 'g7g6'] }, // Leningrad Dutch
+    { fen: START_FEN, moves: ['d2d4', 'f7f5', 'c2c4', 'Ng8f6', 'Nb1c3', 'e7e6'] },
+    { fen: START_FEN, moves: ['d2d4', 'f7f5', 'c2c4', 'Ng8f6', 'g2g3', 'e7e6', 'Bf1g2', 'Bf8e7'] }, // Stonewall
+    
+    // ============================================
+    // LONDON SYSTEM (1.d4 d5 2.Nf3 Nf6 3.Bf4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Ng1f3', 'Ng8f6', 'Bc1f4', 'e7e6', 'e2e3', 'c7c5'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Ng1f3', 'Ng8f6', 'Bc1f4', 'c7c5', 'e2e3', 'Nb8c6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Bc1f4', 'Ng8f6', 'Ng1f3', 'e7e6', 'e2e3', 'Bf8d6'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Bc1f4', 'Ng8f6', 'e2e3', 'c7c5', 'c2c3'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Bc1f4', 'g7g6', 'Ng1f3', 'Bf8g7', 'e2e3'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'g7g6', 'Bc1f4', 'Bf8g7', 'e2e3', 'd7d6'] },
+    
+    // ============================================
+    // TORRE ATTACK (1.d4 Nf6 2.Nf3 e6 3.Bg5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'e7e6', 'Bc1g5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'e7e6', 'Bc1g5', 'c7c5', 'e2e3'] },
+    
+    // ============================================
+    // TROMPOWSKY ATTACK (1.d4 Nf6 2.Bg5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Bc1g5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Bc1g5', 'Nf6e4'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Bc1g5', 'e7e6', 'e2e4'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Bc1g5', 'd7d5', 'e2e3'] },
+    
+    // ============================================
+    // COLLE SYSTEM
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Ng1f3', 'Ng8f6', 'e2e3', 'e7e6', 'Bf1d3', 'c7c5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'e7e6', 'e2e3', 'd7d5', 'Bf1d3'] },
+    
+    // ============================================
+    // ZUKERTORT / RETI OPENING (1.Nf3)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'g2g3', 'Ng8f6', 'Bf1g2', 'g7g6'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'g2g3', 'c7c5', 'Bf1g2', 'Nb8c6'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'c2c4'] }, // Réti
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'c2c4', 'c7c6', 'g2g3'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'c2c4', 'e7e6', 'g2g3', 'Ng8f6', 'Bf1g2'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'Ng8f6', 'g2g3', 'g7g6', 'Bf1g2', 'Bf8g7'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'Ng8f6', 'c2c4', 'g7g6', 'g2g3', 'Bf8g7', 'Bf1g2'] },
+    
+    // ============================================
+    // ENGLISH OPENING (1.c4)
+    // ============================================
+    
+    // English Symmetrical
+    { fen: START_FEN, moves: ['c2c4', 'c7c5', 'Nb1c3', 'Nb8c6', 'Ng1f3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['c2c4', 'c7c5', 'Ng1f3', 'Nb8c6', 'Nb1c3', 'g7g6'] },
+    { fen: START_FEN, moves: ['c2c4', 'c7c5', 'Ng1f3', 'Ng8f6', 'Nb1c3', 'Nb8c6', 'g2g3'] },
+    
+    // English vs e5 (Reversed Sicilian)
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Nb8c6', 'Ng1f3', 'Ng8f6'] },
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Ng8f6', 'Ng1f3', 'Nb8c6', 'g2g3'] },
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'g2g3', 'Ng8f6', 'Bf1g2', 'd7d5', 'c4d5'] },
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Nb8c6', 'g2g3', 'g7g6', 'Bf1g2', 'Bf8g7'] },
+    
+    // English vs Nf6
+    { fen: START_FEN, moves: ['c2c4', 'Ng8f6', 'Nb1c3', 'e7e5'] },
+    { fen: START_FEN, moves: ['c2c4', 'Ng8f6', 'Nb1c3', 'e7e6', 'e2e4', 'd7d5'] },
+    { fen: START_FEN, moves: ['c2c4', 'Ng8f6', 'Nb1c3', 'g7g6', 'g2g3', 'Bf8g7'] },
+    
+    // English Mikenas-Carls
+    { fen: START_FEN, moves: ['c2c4', 'Ng8f6', 'Nb1c3', 'e7e6', 'e2e4'] },
+    
+    // English Four Knights
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Ng8f6', 'Ng1f3', 'Nb8c6', 'g2g3', 'Bf8b4'] },
+    
+    // English Hedgehog
+    { fen: START_FEN, moves: ['c2c4', 'c7c5', 'Ng1f3', 'Ng8f6', 'g2g3', 'b7b6', 'Bf1g2', 'Bc8b7'] },
+    
+    // ============================================
+    // BIRD'S OPENING (1.f4)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['f2f4', 'd7d5', 'Ng1f3', 'Ng8f6', 'e2e3', 'g7g6'] },
+    { fen: START_FEN, moves: ['f2f4', 'd7d5', 'Ng1f3', 'Ng8f6', 'g2g3', 'g7g6'] },
+    { fen: START_FEN, moves: ['f2f4', 'e7e5'] }, // From's Gambit
+    
+    // ============================================
+    // NIMZOWITSCH-LARSEN (1.b3)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['b2b3', 'e7e5', 'Bc1b2', 'Nb8c6', 'e2e3'] },
+    { fen: START_FEN, moves: ['b2b3', 'd7d5', 'Bc1b2', 'Ng8f6', 'Ng1f3', 'e7e6'] },
+    
+    // ============================================
+    // KING'S FIANCHETTO (1.g3)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['g2g3', 'd7d5', 'Bf1g2', 'Ng8f6', 'Ng1f3'] },
+    { fen: START_FEN, moves: ['g2g3', 'e7e5', 'Bf1g2', 'd7d5', 'd2d3', 'Ng8f6'] },
+    
+    // ============================================
+    // OWEN DEFENSE / HIPPO (1.e4 b6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'b7b6', 'd2d4', 'Bc8b7', 'Nb1c3', 'e7e6'] },
+    
+    // ============================================
+    // NIMZOWITSCH DEFENSE (1.e4 Nc6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'Nb8c6', 'd2d4', 'd7d5', 'e4e5'] },
+    { fen: START_FEN, moves: ['e2e4', 'Nb8c6', 'Ng1f3', 'e7e5'] },
+    
+    // ============================================
+    // ST. GEORGE / MILES DEFENSE (1.e4 a6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['e2e4', 'a7a6', 'd2d4', 'b7b5', 'Ng1f3', 'Bc8b7'] },
+    
+    // ============================================
+    // QUEEN PAWN GAME (1.d4 d5 others)
+    // ============================================
+    
+    // Veresov System
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Nb1c3', 'Ng8f6', 'Bc1g5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Nb1c3', 'd7d5', 'Bc1g5'] },
+    
+    // Blackmar-Diemer Gambit
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'e2e4', 'd5e4', 'Nb1c3', 'Ng8f6', 'f2f3'] },
+    
+    // ============================================
+    // BUDAPEST GAMBIT (1.d4 Nf6 2.c4 e5)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e5', 'd4e5', 'Nf6g4'] },
+    
+    // ============================================
+    // OLD INDIAN DEFENSE (1.d4 Nf6 2.c4 d6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'd7d6', 'Nb1c3', 'e7e5'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'd7d6', 'Nb1c3', 'Nb8d7', 'e2e4'] },
+    
+    // ============================================
+    // MODERN / ROBATSCH (1.d4 g6 or 1.e4 g6)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['d2d4', 'g7g6', 'e2e4', 'Bf8g7', 'Nb1c3', 'd7d6', 'Ng1f3'] },
+    { fen: START_FEN, moves: ['d2d4', 'g7g6', 'c2c4', 'Bf8g7', 'Nb1c3', 'd7d6'] },
+    
+    // ============================================
+    // KING'S INDIAN ATTACK (for White)
+    // ============================================
+    
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'g2g3', 'Ng8f6', 'Bf1g2', 'c7c5', 'e1g1', 'Nb8c6', 'd2d3'] },
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d3', 'd7d5', 'Nb1d2', 'Ng8f6', 'Ng1f3', 'Bf8e7', 'g2g3'] },
+    { fen: START_FEN, moves: ['Ng1f3', 'd7d5', 'g2g3', 'c7c5', 'Bf1g2', 'Nb8c6', 'e1g1', 'e7e5'] },
+    
+    // ============================================
+    // SYMMETRICAL / EXCHANGE VARIATIONS
+    // ============================================
+    
+    // Four Knights Symmetrical
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Nb1c3', 'Ng8f6', 'Bf1c4', 'Bf8c5'] },
+    
+    // ============================================
+    // MISCELLANEOUS / IRREGULAR
+    // ============================================
+    
+    // Ware Opening
+    { fen: START_FEN, moves: ['a2a4'] },
+    
+    // Grob
+    { fen: START_FEN, moves: ['g2g4', 'd7d5', 'Bf1g2'] },
+    
+    // Polish (Orangutan)
+    { fen: START_FEN, moves: ['b2b4', 'e7e5', 'Bc1b2', 'Ng8f6'] },
+    
+    // Sicilian Wing Gambit
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'b2b4'] },
+    
+    // ============================================
+    // ADDITIONAL COMMON TRANSPOSITIONS
+    // ============================================
+    
+    // d4 Nf6 without c4
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'd7d5', 'e2e3', 'e7e6', 'Bf1d3'] },
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'e7e6', 'e2e3', 'b7b6', 'Bf1d3', 'Bc8b7'] },
+    
+    // Barry Attack
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Ng1f3', 'g7g6', 'Nb1c3', 'd7d5', 'Bc1f4'] },
+    
+    // Jobava London
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'Nb1c3', 'd7d5', 'Bc1f4'] },
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'Nb1c3', 'Ng8f6', 'Bc1f4', 'e7e6'] },
+    
+    // ============================================
+    // DEEPER LINES FOR POPULAR OPENINGS
+    // ============================================
+    
+    // Sicilian Najdorf English Attack
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'a7a6', 'Bc1e3', 'e7e5', 'Nd4b3'] },
+    
+    // Sicilian Dragon Yugoslav Attack
+    { fen: START_FEN, moves: ['e2e4', 'c7c5', 'Ng1f3', 'd7d6', 'd2d4', 'c5d4', 'Nf3d4', 'Ng8f6', 'Nb1c3', 'g7g6', 'Bc1e3', 'Bf8g7', 'f2f3', 'e8g8', 'Qd1d2', 'Nb8c6'] },
+    
+    // Ruy Lopez Breyer
+    { fen: START_FEN, moves: ['e2e4', 'e7e5', 'Ng1f3', 'Nb8c6', 'Bf1b5', 'a7a6', 'Bb5a4', 'Ng8f6', 'e1g1', 'Bf8e7', 'Rf1e1', 'b7b5', 'Ba4b3', 'd7d6', 'c2c3', 'e8g8', 'h2h3', 'Nc6b8'] },
+    
+    // QGD Cambridge Springs
+    { fen: START_FEN, moves: ['d2d4', 'd7d5', 'c2c4', 'e7e6', 'Nb1c3', 'Ng8f6', 'Bc1g5', 'Nb8d7', 'Ng1f3', 'c7c6', 'e2e3', 'Qd8a5'] },
+    
+    // Nimzo-Indian Hübner
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'e7e6', 'Nb1c3', 'Bf8b4', 'e2e3', 'c7c5', 'Bf1d3', 'Nb8c6', 'Ng1f3', 'Bb4c3', 'b2c3', 'd7d6'] },
+    
+    // Grünfeld Exchange
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'd7d5', 'c4d5', 'Nf6d5', 'e2e4', 'Nd5c3', 'b2c3', 'Bf8g7', 'Ng1f3', 'c7c5', 'Bf1e2'] },
+    
+    // KID Mar del Plata
+    { fen: START_FEN, moves: ['d2d4', 'Ng8f6', 'c2c4', 'g7g6', 'Nb1c3', 'Bf8g7', 'e2e4', 'd7d6', 'Ng1f3', 'e8g8', 'Bf1e2', 'e7e5', 'd4d5', 'Nb8c6'] },
+    
+    // French Winawer Poisoned Pawn
+    { fen: START_FEN, moves: ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'Nb1c3', 'Bf8b4', 'e4e5', 'c7c5', 'a2a3', 'Bb4c3', 'b2c3', 'Ng8e7', 'Qd1g4'] },
+    
+    // Caro-Kann Advance Short
+    { fen: START_FEN, moves: ['e2e4', 'c7c6', 'd2d4', 'd7d5', 'e4e5', 'Bc8f5', 'Ng1f3', 'e7e6', 'Bf1e2', 'Nb8d7', 'e1g1'] },
+    
+    // English Botvinnik System
+    { fen: START_FEN, moves: ['c2c4', 'e7e5', 'Nb1c3', 'Nb8c6', 'g2g3', 'g7g6', 'Bf1g2', 'Bf8g7', 'e2e4'] },
+];
 
   class OpeningBook {
     constructor() { this.enabled = true; this.randomness = 10; }
