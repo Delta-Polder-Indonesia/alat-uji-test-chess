@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bintang Toba Engine Tester</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.css">
+</head>
+<body class="min-h-screen bg-neutral-950 text-neutral-100">
+  <main class="mx-auto max-w-7xl px-4 py-5 md:px-6 md:py-6">
+    <header class="mb-5">
+      <h1 class="text-2xl font-semibold tracking-tight md:text-3xl">Bintang Toba Engine Tester</h1>
+      <p class="mt-1 text-sm text-neutral-400">GUI uji langsung untuk engine.js dengan chess.js + chessboard.js, MultiPV, PV mode, ACPL, dan WDL.</p>
+    </header>
+
+    <section class="grid gap-6 lg:grid-cols-[460px_1fr]">
+      <div>
+        <div id="board" class="mx-auto w-full max-w-[460px]"></div>
+        <div class="mx-auto mt-3 w-full max-w-[460px]">
+          <div class="h-3 w-full overflow-hidden rounded bg-neutral-800">
+            <div id="evalFill" class="h-full bg-white transition-all duration-200" style="width: 50%"></div>
+          </div>
+          <div class="mt-1 flex items-center justify-between text-xs text-neutral-300">
+            <span id="evalText">Eval: 0.00</span>
+            <span id="acplText">ACPL: -</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-5">
+        <section>
+          <h2 class="mb-2 text-base font-medium">Kontrol Cepat</h2>
+          <div class="flex flex-wrap gap-2">
+            <button id="newBtn" class="rounded bg-neutral-100 px-3 py-2 text-sm font-medium text-neutral-900 hover:bg-white">New Game</button>
+            <button id="playBtn" class="rounded bg-emerald-500 px-3 py-2 text-sm font-medium text-neutral-950 hover:bg-emerald-400">Play vs Engine</button>
+            <button id="analyzeBtn" class="rounded bg-sky-500 px-3 py-2 text-sm font-medium text-neutral-950 hover:bg-sky-400">Analyze Position</button>
+            <button id="stopBtn" class="rounded bg-amber-500 px-3 py-2 text-sm font-medium text-neutral-950 hover:bg-amber-400">Stop</button>
+            <button id="undoBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Undo</button>
+            <button id="flipBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Flip Board</button>
+            <button id="switchSideBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Switch Side</button>
+          </div>
+          <p id="status" class="mt-2 text-sm text-neutral-300">Status: loading engine...</p>
+          <p id="bestMoveText" class="mt-1 text-sm text-emerald-300">Bestmove: -</p>
+        </section>
+
+        <section>
+          <h2 class="mb-2 text-base font-medium">Opsi Engine</h2>
+          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <label class="text-sm">Depth
+              <input id="depthInput" type="number" min="1" max="40" value="6" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+            </label>
+            <label class="text-sm">Move Time (ms)
+              <input id="moveTimeInput" type="number" min="50" max="120000" value="1200" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+            </label>
+            <label class="text-sm">MultiPV
+              <select id="multiPvInput" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="5">5</option>
+                <option value="8">8</option>
+              </select>
+            </label>
+            <label class="text-sm">PV Format
+              <select id="pvFormatInput" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+                <option value="uci" selected>uci</option>
+                <option value="san">san</option>
+              </select>
+            </label>
+            <label class="text-sm">Strength Preset
+              <select id="strengthInput" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+                <option value="Custom">Custom</option>
+                <option value="Elo1200">Elo1200</option>
+                <option value="Elo1500">Elo1500</option>
+                <option value="Elo1800" selected>Elo1800</option>
+                <option value="Elo2200">Elo2200</option>
+                <option value="Max">Max</option>
+              </select>
+            </label>
+            <label class="text-sm">Queen Safety
+              <select id="queenSafetyInput" class="mt-1 w-full rounded bg-neutral-900 px-2 py-2 text-sm ring-1 ring-neutral-700">
+                <option value="Strong" selected>Strong</option>
+                <option value="Normal">Normal</option>
+                <option value="Weak">Weak</option>
+              </select>
+            </label>
+            <label class="inline-flex items-center gap-2 pt-7 text-sm">
+              <input id="showAcplInput" type="checkbox" checked class="h-4 w-4">
+              <span>Show ACPL</span>
+            </label>
+            <label class="inline-flex items-center gap-2 pt-7 text-sm">
+              <input id="showWdlInput" type="checkbox" class="h-4 w-4">
+              <span>Show WDL</span>
+            </label>
+            <label class="inline-flex items-center gap-2 pt-7 text-sm">
+              <input id="ownBookInput" type="checkbox" checked class="h-4 w-4">
+              <span>Own Book</span>
+            </label>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button id="applyOptionsBtn" class="rounded bg-indigo-500 px-3 py-2 text-sm font-medium text-neutral-950 hover:bg-indigo-400">Apply Options</button>
+            <button id="clearHashBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Clear Hash</button>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="mb-2 text-base font-medium">PV / MultiPV</h2>
+          <pre id="pvPanel" class="h-40 overflow-auto rounded bg-neutral-900 p-3 text-xs leading-relaxed ring-1 ring-neutral-700">Belum ada PV.</pre>
+          <div class="mt-2 text-xs text-neutral-300" id="statsText">Depth: - | Nodes: - | NPS: - | Time: - | Hashfull: -</div>
+        </section>
+
+        <section>
+          <h2 class="mb-2 text-base font-medium">FEN / PGN</h2>
+          <input id="fenInput" type="text" class="w-full rounded bg-neutral-900 px-3 py-2 text-xs ring-1 ring-neutral-700" placeholder="Masukkan FEN lalu klik Load FEN">
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button id="loadFenBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Load FEN</button>
+            <button id="copyFenBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Copy FEN</button>
+            <button id="copyPgnBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Copy PGN</button>
+          </div>
+        </section>
+
+        <section class="grid gap-4 md:grid-cols-2">
+          <div>
+            <h2 class="mb-2 text-base font-medium">History</h2>
+            <pre id="historyPanel" class="h-36 overflow-auto rounded bg-neutral-900 p-3 text-xs leading-relaxed ring-1 ring-neutral-700"></pre>
+          </div>
+          <div>
+            <h2 class="mb-2 text-base font-medium">Engine Log</h2>
+            <pre id="logPanel" class="h-36 overflow-auto rounded bg-neutral-900 p-3 text-xs leading-relaxed ring-1 ring-neutral-700">Menunggu output...</pre>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.1.0/chess.min.js"></script>
+  <script>
+    const chess = new Chess();
+    let board = null;
+    let worker = null;
+    let engineReady = false;
+    let thinking = false;
+    let analysisMode = false;
+    let playVsEngine = true;
+    let playerColor = 'w';
+
+    const pvState = {
+      lines: new Map(),
+      depth: '-',
+      seldepth: '-',
+      nodes: '-',
+      nps: '-',
+      time: '-',
+      hashfull: '-',
+      acpl: '-',
+    };
+
+    const el = {
+      status: document.getElementById('status'),
+      bestMoveText: document.getElementById('bestMoveText'),
+      evalFill: document.getElementById('evalFill'),
+      evalText: document.getElementById('evalText'),
+      acplText: document.getElementById('acplText'),
+      pvPanel: document.getElementById('pvPanel'),
+      statsText: document.getElementById('statsText'),
+      historyPanel: document.getElementById('historyPanel'),
+      logPanel: document.getElementById('logPanel'),
+      fenInput: document.getElementById('fenInput'),
+      depthInput: document.getElementById('depthInput'),
+      moveTimeInput: document.getElementById('moveTimeInput'),
+      multiPvInput: document.getElementById('multiPvInput'),
+      pvFormatInput: document.getElementById('pvFormatInput'),
+      strengthInput: document.getElementById('strengthInput'),
+      queenSafetyInput: document.getElementById('queenSafetyInput'),
+      showAcplInput: document.getElementById('showAcplInput'),
+      showWdlInput: document.getElementById('showWdlInput'),
+      ownBookInput: document.getElementById('ownBookInput'),
+    };
+
+    function setStatus(text) {
+      el.status.textContent = 'Status: ' + text;
+    }
+
+    function addLog(text) {
+      el.logPanel.textContent = (text + '\n' + el.logPanel.textContent).slice(0, 12000);
+    }
+
+    function engineSide() {
+      return playerColor === 'w' ? 'b' : 'w';
+    }
+
+    function renderStats() {
+      el.statsText.textContent =
+        'Depth: ' + pvState.depth +
+        ' | SelDepth: ' + pvState.seldepth +
+        ' | Nodes: ' + pvState.nodes +
+        ' | NPS: ' + pvState.nps +
+        ' | Time: ' + pvState.time + 'ms' +
+        ' | Hashfull: ' + pvState.hashfull;
+      el.acplText.textContent = 'ACPL: ' + pvState.acpl;
+    }
+
+    function renderPv() {
+      if (!pvState.lines.size) {
+        el.pvPanel.textContent = 'Belum ada PV.';
+        return;
+      }
+      const keys = [...pvState.lines.keys()].sort((a, b) => a - b);
+      const rows = [];
+      for (const k of keys) {
+        const line = pvState.lines.get(k);
+        const scoreText = line.scoreType === 'mate'
+          ? 'mate ' + line.scoreValue
+          : 'cp ' + line.scoreValue;
+        const wdlText = line.wdl ? ' | wdl ' + line.wdl.join('/') : '';
+        rows.push('#' + k + ' d' + line.depth + ' ' + scoreText + wdlText + ' | ' + line.pv);
+      }
+      el.pvPanel.textContent = rows.join('\n');
+    }
+
+    function clearAnalysisPanels() {
+      pvState.lines.clear();
+      pvState.depth = '-';
+      pvState.seldepth = '-';
+      pvState.nodes = '-';
+      pvState.nps = '-';
+      pvState.time = '-';
+      pvState.hashfull = '-';
+      pvState.acpl = '-';
+      el.evalFill.style.width = '50%';
+      el.evalText.textContent = 'Eval: 0.00';
+      renderPv();
+      renderStats();
+    }
+
+    function refreshBoardAndMeta() {
+      board.position(chess.fen());
+      el.fenInput.value = chess.fen();
+      const hist = chess.history();
+      const rows = [];
+      for (let i = 0; i < hist.length; i += 2) {
+        rows.push((i / 2 + 1) + '. ' + hist[i] + (hist[i + 1] ? ' ' + hist[i + 1] : ''));
+      }
+      el.historyPanel.textContent = rows.join('\n');
+    }
+
+    function parseInfoLine(msg) {
+      const t = msg.trim().split(/\s+/);
+      if (t[1] === 'string') {
+        if (t[2] === 'acpl') {
+          pvState.acpl = t[3] || '-';
+          renderStats();
+        } else if (t[2] === 'evalbar') {
+          const v = Number(t[3]);
+          if (Number.isFinite(v)) {
+            const pct = Math.max(0, Math.min(100, v));
+            el.evalFill.style.width = pct + '%';
+          }
+        }
+        addLog(msg);
+        return;
+      }
+
+      let depth = null;
+      let seldepth = null;
+      let multipv = 1;
+      let scoreType = 'cp';
+      let scoreValue = 0;
+      let nodes = null;
+      let nps = null;
+      let time = null;
+      let hashfull = null;
+      let wdl = null;
+      let pv = '';
+
+      for (let i = 1; i < t.length; i++) {
+        if (t[i] === 'depth') depth = Number(t[i + 1]);
+        if (t[i] === 'seldepth') seldepth = Number(t[i + 1]);
+        if (t[i] === 'multipv') multipv = Number(t[i + 1]);
+        if (t[i] === 'score') {
+          scoreType = t[i + 1];
+          scoreValue = Number(t[i + 2]);
+        }
+        if (t[i] === 'nodes') nodes = Number(t[i + 1]);
+        if (t[i] === 'nps') nps = Number(t[i + 1]);
+        if (t[i] === 'time') time = Number(t[i + 1]);
+        if (t[i] === 'hashfull') hashfull = Number(t[i + 1]);
+        if (t[i] === 'wdl') {
+          wdl = [Number(t[i + 1]), Number(t[i + 2]), Number(t[i + 3])];
+        }
+        if (t[i] === 'pv') {
+          pv = t.slice(i + 1).join(' ');
+          break;
+        }
+      }
+
+      if (depth !== null) pvState.depth = depth;
+      if (seldepth !== null) pvState.seldepth = seldepth;
+      if (nodes !== null) pvState.nodes = nodes;
+      if (nps !== null) pvState.nps = nps;
+      if (time !== null) pvState.time = time;
+      if (hashfull !== null) pvState.hashfull = hashfull;
+
+      if (scoreType === 'mate') {
+        el.evalText.textContent = 'Mate: ' + scoreValue;
+        el.evalFill.style.width = scoreValue > 0 ? '100%' : '0%';
+      } else if (Number.isFinite(scoreValue)) {
+        const cp = Math.max(-1000, Math.min(1000, scoreValue));
+        const pct = 50 + cp / 20;
+        el.evalFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+        el.evalText.textContent = 'Eval: ' + (scoreValue / 100).toFixed(2);
+      }
+
+      if (pv) {
+        pvState.lines.set(multipv || 1, {
+          depth: depth === null ? '-' : depth,
+          scoreType,
+          scoreValue,
+          wdl,
+          pv,
+        });
+        renderPv();
+      }
+      renderStats();
+      addLog(msg);
+    }
+
+    function handleBestmove(msg) {
+      thinking = false;
+      setStatus('ready');
+      const parts = msg.trim().split(/\s+/);
+      const bestmove = parts[1] || '0000';
+      const ponderIdx = parts.indexOf('ponder');
+      const ponder = ponderIdx > -1 ? parts[ponderIdx + 1] : '';
+      el.bestMoveText.textContent = 'Bestmove: ' + bestmove + (ponder ? ' | Ponder: ' + ponder : '');
+
+      if (!playVsEngine || analysisMode) return;
+      if (bestmove === '0000') return;
+      if (chess.turn() !== engineSide()) return;
+
+      const applied = chess.move({
+        from: bestmove.slice(0, 2),
+        to: bestmove.slice(2, 4),
+        promotion: bestmove.length > 4 ? bestmove[4] : 'q',
+      });
+      if (applied) refreshBoardAndMeta();
+    }
+
+    function applyOptions() {
+      if (!worker || !engineReady) return;
+      worker.postMessage('setoption name Strength Preset value ' + el.strengthInput.value);
+      worker.postMessage('setoption name MultiPV value ' + el.multiPvInput.value);
+      worker.postMessage('setoption name PVFormat value ' + el.pvFormatInput.value);
+      worker.postMessage('setoption name UCI_ShowACPL value ' + (el.showAcplInput.checked ? 'true' : 'false'));
+      worker.postMessage('setoption name UCI_ShowWDL value ' + (el.showWdlInput.checked ? 'true' : 'false'));
+      worker.postMessage('setoption name OwnBook value ' + (el.ownBookInput.checked ? 'true' : 'false'));
+      worker.postMessage('setoption name Queen Safety value ' + el.queenSafetyInput.value);
+      worker.postMessage('setoption name Move Overhead value 30');
+      worker.postMessage('setoption name Hash value 64');
+      addLog('info string options applied');
+    }
+
+    function sendPosition() {
+      worker.postMessage('position fen ' + chess.fen());
+    }
+
+    function requestSearch(isAnalysis) {
+      if (!engineReady || thinking || chess.game_over()) return;
+      thinking = true;
+      analysisMode = !!isAnalysis;
+      setStatus(isAnalysis ? 'analyzing' : 'thinking');
+      clearAnalysisPanels();
+      applyOptions();
+      sendPosition();
+
+      const depth = Math.max(1, Math.min(40, Number(el.depthInput.value) || 6));
+      const moveTime = Math.max(50, Number(el.moveTimeInput.value) || 1200);
+      const multipv = Math.max(1, Math.min(12, Number(el.multiPvInput.value) || 1));
+      worker.postMessage('go depth ' + depth + ' movetime ' + moveTime + ' multipv ' + multipv);
+    }
+
+    function stopEngine() {
+      if (!worker) return;
+      worker.postMessage('stop');
+      thinking = false;
+      analysisMode = false;
+      setStatus('stopped');
+    }
+
+    function onDragStart(source, piece) {
+      if (thinking || chess.game_over()) return false;
+      if (playVsEngine && chess.turn() !== playerColor) return false;
+      if ((chess.turn() === 'w' && piece.startsWith('b')) || (chess.turn() === 'b' && piece.startsWith('w'))) return false;
+      return true;
+    }
+
+    function onDrop(source, target) {
+      const move = chess.move({ from: source, to: target, promotion: 'q' });
+      if (!move) return 'snapback';
+      refreshBoardAndMeta();
+      if (playVsEngine && chess.turn() === engineSide()) {
+        requestSearch(false);
+      }
+      return undefined;
+    }
+
+    async function copyText(value) {
+      try {
+        await navigator.clipboard.writeText(value);
+        setStatus('copied');
+      } catch (err) {
+        setStatus('clipboard blocked');
+      }
+    }
+
+    function initBoard() {
+      board = Chessboard('board', {
+        draggable: true,
+        position: 'start',
+        orientation: playerColor === 'w' ? 'white' : 'black',
+        pieceTheme: 'https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/img/chesspieces/wikipedia/{piece}.png',
+        onDragStart,
+        onDrop,
+        onSnapEnd: () => board.position(chess.fen()),
+      });
+      refreshBoardAndMeta();
+    }
+
+    function initWorker() {
+      worker = new Worker('engine.js');
+      worker.onmessage = (e) => {
+        const msg = String(e.data || '');
+        if (msg === 'readyok') {
+          engineReady = true;
+          setStatus('ready');
+          applyOptions();
+          return;
+        }
+        if (msg.startsWith('bestmove')) {
+          handleBestmove(msg);
+          addLog(msg);
+          return;
+        }
+        if (msg.startsWith('info')) {
+          parseInfoLine(msg);
+          return;
+        }
+        if (msg.startsWith('id ') || msg.startsWith('option ') || msg === 'uciok') {
+          addLog(msg);
+          return;
+        }
+        addLog(msg);
+      };
+      worker.onerror = (err) => {
+        setStatus('engine error');
+        addLog('worker error: ' + err.message);
+      };
+      worker.postMessage('uci');
+      worker.postMessage('isready');
+    }
+
+    function bindUI() {
+      document.getElementById('newBtn').onclick = () => {
+        stopEngine();
+        chess.reset();
+        refreshBoardAndMeta();
+        clearAnalysisPanels();
+        if (worker) worker.postMessage('ucinewgame');
+        if (playVsEngine && playerColor === 'b') requestSearch(false);
+      };
+
+      document.getElementById('playBtn').onclick = () => {
+        playVsEngine = true;
+        analysisMode = false;
+        setStatus('play mode');
+        applyOptions();
+        if (chess.turn() === engineSide()) requestSearch(false);
+      };
+
+      document.getElementById('analyzeBtn').onclick = () => {
+        playVsEngine = false;
+        requestSearch(true);
+      };
+
+      document.getElementById('stopBtn').onclick = stopEngine;
+
+      document.getElementById('undoBtn').onclick = () => {
+        stopEngine();
+        if (playVsEngine) {
+          chess.undo();
+          chess.undo();
+        } else {
+          chess.undo();
+        }
+        refreshBoardAndMeta();
+      };
+
+      document.getElementById('flipBtn').onclick = () => board.flip();
+
+      document.getElementById('switchSideBtn').onclick = () => {
+        stopEngine();
+        playerColor = playerColor === 'w' ? 'b' : 'w';
+        board.orientation(playerColor === 'w' ? 'white' : 'black');
+        chess.reset();
+        refreshBoardAndMeta();
+        if (worker) worker.postMessage('ucinewgame');
+        if (playVsEngine && chess.turn() === engineSide()) requestSearch(false);
+      };
+
+      document.getElementById('applyOptionsBtn').onclick = applyOptions;
+      document.getElementById('clearHashBtn').onclick = () => {
+        if (!worker || !engineReady) return;
+        worker.postMessage('setoption name Clear Hash');
+        addLog('info string hash cleared');
+      };
+
+      document.getElementById('loadFenBtn').onclick = () => {
+        const fen = el.fenInput.value.trim();
+        const check = chess.validate_fen(fen);
+        if (!check.valid) {
+          setStatus('invalid FEN');
+          addLog('invalid FEN: ' + check.error);
+          return;
+        }
+        stopEngine();
+        chess.load(fen);
+        refreshBoardAndMeta();
+        clearAnalysisPanels();
+        setStatus('FEN loaded');
+      };
+
+      document.getElementById('copyFenBtn').onclick = () => copyText(chess.fen());
+      document.getElementById('copyPgnBtn').onclick = () => copyText(chess.pgn());
+
+      ['multiPvInput', 'pvFormatInput', 'showAcplInput', 'showWdlInput', 'strengthInput', 'queenSafetyInput', 'ownBookInput']
+        .forEach((id) => document.getElementById(id).addEventListener('change', applyOptions));
+
+      window.addEventListener('resize', () => board && board.resize());
+    }
+
+    function init() {
+      initBoard();
+      bindUI();
+      initWorker();
+      renderStats();
+    }
+
+    $(init);
+  </script>
+</body>
+</html>
