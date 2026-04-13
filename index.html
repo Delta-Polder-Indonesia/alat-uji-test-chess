@@ -11,8 +11,6 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-variant-numeric: tabular-nums;
     }
-
-    /* ── Board wrapper ── */
     #boardWrap {
       position: relative;
       width: 100%;
@@ -23,8 +21,6 @@
       box-shadow: 0 4px 24px rgba(0,0,0,.7), 0 0 0 10px #312e2b;
       user-select: none;
     }
-
-    /* Coordinate strips */
     #boardWrap .coord-ranks {
       position: absolute;
       left: 0; top: 0;
@@ -47,8 +43,6 @@
       font-family: ui-monospace, monospace;
       color: #a89f97;
     }
-
-    /* The actual 8×8 grid */
     .board-grid {
       position: absolute;
       left: 18px; top: 0;
@@ -57,8 +51,6 @@
       grid-template-columns: repeat(8, 1fr);
       grid-template-rows: repeat(8, 1fr);
     }
-
-    /* Squares */
     .sq {
       position: relative;
       display: flex;
@@ -69,32 +61,18 @@
     }
     .sq.light { background: #f0d9b5; }
     .sq.dark  { background: #b58863; }
-
-    /* Hover tint */
     .sq:hover::after {
       content: "";
       position: absolute; inset: 0;
       background: rgba(255,255,255,.12);
       pointer-events: none;
     }
-
-    /* Selected square highlight */
-    .sq.sel {
-      background: #f6f669 !important;
-    }
-    .sq.sel.dark  { background: #baca2b !important; }
-
-    /* Last move highlight */
+    .sq.sel             { background: #f6f669 !important; }
+    .sq.sel.dark        { background: #baca2b !important; }
     .sq.last-from,
-    .sq.last-to {
-      background: #cdd16e !important;
-    }
+    .sq.last-to         { background: #cdd16e !important; }
     .sq.last-from.dark,
-    .sq.last-to.dark {
-      background: #aaa23a !important;
-    }
-
-    /* Legal move dot */
+    .sq.last-to.dark    { background: #aaa23a !important; }
     .sq.legal .legal-dot {
       position: absolute;
       width: 30%; height: 30%;
@@ -103,8 +81,6 @@
       pointer-events: none;
       z-index: 3;
     }
-
-    /* Capture ring */
     .sq.capture .legal-dot {
       position: absolute;
       width: 100%; height: 100%;
@@ -114,13 +90,10 @@
       pointer-events: none;
       z-index: 3;
     }
-
-    /* Check highlight */
     .sq.in-check {
-      background: radial-gradient(ellipse at center, #ff0000 0%, #e70000 25%, rgba(169,0,0,0) 89%, rgba(158,0,0,0) 100%) !important;
+      background: radial-gradient(ellipse at center,
+        #ff0000 0%, #e70000 25%, rgba(169,0,0,0) 89%, rgba(158,0,0,0) 100%) !important;
     }
-
-    /* Piece SVG */
     .piece {
       position: absolute;
       width: 100%; height: 100%;
@@ -130,13 +103,7 @@
       filter: drop-shadow(1px 2px 2px rgba(0,0,0,.35));
       transition: opacity .06s;
     }
-
-    /* Drag ghost */
-    .piece.dragging {
-      opacity: .5;
-    }
-
-    /* Drag overlay (floating piece following cursor) */
+    .piece.dragging { opacity: .5; }
     #dragGhost {
       position: fixed;
       pointer-events: none;
@@ -146,8 +113,6 @@
       filter: drop-shadow(2px 4px 6px rgba(0,0,0,.5));
       transform: translate(-50%,-50%);
     }
-
-    /* Promotion modal */
     #promoModal {
       display: none;
       position: fixed; inset: 0;
@@ -177,30 +142,24 @@
       border-color: #f6f669;
     }
     #promoChoices button img { width: 64px; height: 64px; }
-
-    /* Eval bar */
     #evalBarTrack {
-      height: 14px;
-      width: 100%;
+      height: 14px; width: 100%;
       border-radius: 99px;
       background: #1c1c1c;
       overflow: hidden;
-      position: relative;
       box-shadow: 0 0 0 1px #444 inset;
     }
     #evalFill {
       height: 100%;
-      background: linear-gradient(90deg, #f0f0f0, #ffffff);
+      background: linear-gradient(90deg,#f0f0f0,#fff);
       transition: width .25s ease;
     }
   </style>
 </head>
 <body class="min-h-screen bg-neutral-950 text-neutral-100">
 
-<!-- Drag Ghost -->
 <img id="dragGhost" alt="">
 
-<!-- Promotion Modal -->
 <div id="promoModal">
   <div>
     <p class="text-center text-sm text-neutral-300 mb-3 font-semibold tracking-wide uppercase">Promote to</p>
@@ -215,21 +174,16 @@
   </header>
 
   <section class="grid gap-4 lg:grid-cols-[520px_1fr]">
-    <!-- LEFT: board + eval -->
     <div>
       <div class="rounded-xl bg-[#262421] p-3 ring-1 ring-neutral-700">
         <div id="boardWrap">
           <div class="coord-ranks" id="coordRanks"></div>
-          <div class="board-grid" id="board"></div>
+          <div class="board-grid"  id="board"></div>
           <div class="coord-files" id="coordFiles"></div>
         </div>
       </div>
-
-      <!-- Eval bar -->
       <div class="mt-3 rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
-        <div id="evalBarTrack">
-          <div id="evalFill" style="width:50%"></div>
-        </div>
+        <div id="evalBarTrack"><div id="evalFill" style="width:50%"></div></div>
         <div class="mt-2 flex items-center justify-between text-xs mono-num text-neutral-300">
           <span id="evalText">Eval: 0.00</span>
           <span id="acplText">ACPL: —</span>
@@ -237,9 +191,7 @@
       </div>
     </div>
 
-    <!-- RIGHT: controls & panels -->
     <div class="space-y-4">
-      <!-- Controls -->
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Kontrol</h2>
         <div class="flex flex-wrap gap-2">
@@ -251,11 +203,10 @@
           <button id="flipBtn"    class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Flip</button>
           <button id="sideBtn"    class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Switch Side</button>
         </div>
-        <p id="statusText"    class="mt-2 text-sm text-neutral-300">Status: loading engine...</p>
-        <p id="bestmoveText"  class="mono-num text-sm text-emerald-300">Bestmove: —</p>
+        <p id="statusText"   class="mt-2 text-sm text-neutral-300">Status: loading engine...</p>
+        <p id="bestmoveText" class="mono-num text-sm text-emerald-300">Bestmove: —</p>
       </section>
 
-      <!-- Engine Options -->
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Opsi Engine</h2>
         <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -307,28 +258,21 @@
               <option value="Weak">Weak</option>
             </select>
           </label>
-          <label class="inline-flex items-center gap-2 pt-7 text-sm">
-            <input id="showWdlInput" type="checkbox">Show WDL
-          </label>
-          <label class="inline-flex items-center gap-2 pt-7 text-sm">
-            <input id="showAcplInput" type="checkbox" checked>Show ACPL
-          </label>
-          <label class="inline-flex items-center gap-2 pt-7 text-sm">
-            <input id="ponderInput" type="checkbox">Ponder
-          </label>
+          <label class="inline-flex items-center gap-2 pt-7 text-sm"><input id="showWdlInput"  type="checkbox">Show WDL</label>
+          <label class="inline-flex items-center gap-2 pt-7 text-sm"><input id="showAcplInput" type="checkbox" checked>Show ACPL</label>
+          <label class="inline-flex items-center gap-2 pt-7 text-sm"><input id="ponderInput"   type="checkbox">Ponder</label>
         </div>
         <div class="mt-3 flex flex-wrap gap-2">
-          <button id="applyBtn"    class="rounded bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400">Apply Options</button>
+          <button id="applyBtn"     class="rounded bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400">Apply Options</button>
           <button id="clearHashBtn" class="rounded bg-neutral-700 px-3 py-2 text-sm hover:bg-neutral-600">Clear Hash</button>
         </div>
       </section>
 
-      <!-- PV + History -->
       <section class="grid gap-4 xl:grid-cols-2">
         <div class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
           <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">PV / MultiPV</h2>
-          <pre id="pvPanel" class="h-52 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Belum ada PV.</pre>
-          <p id="statsText" class="mt-2 text-xs mono-num text-neutral-400">Depth: — | Sel: — | Nodes: — | NPS: — | Time: — | Hashfull: —</p>
+          <pre id="pvPanel"    class="h-52 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Belum ada PV.</pre>
+          <p   id="statsText"  class="mt-2 text-xs mono-num text-neutral-400">Depth: — | Sel: — | Nodes: — | NPS: — | Time: — | Hashfull: —</p>
         </div>
         <div class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
           <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Move History</h2>
@@ -336,7 +280,6 @@
         </div>
       </section>
 
-      <!-- FEN/PGN -->
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">FEN / PGN</h2>
         <input id="fenInput" class="w-full rounded bg-neutral-950 px-3 py-2 text-xs mono-num ring-1 ring-neutral-700"
@@ -348,7 +291,6 @@
         </div>
       </section>
 
-      <!-- Engine Log -->
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Engine Log</h2>
         <pre id="logPanel" class="h-40 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Menunggu output engine…</pre>
@@ -358,23 +300,319 @@
 </main>
 
 <script>
-/* ═══════════════════════════════════════════
-   PIECE SVGs – inline Lichess-style pieces
-   (no external image request at all)
-═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   PIECE SVG  –  Lichess-standard paths, Raja/Menteri/Kuda
+   diperbaiki agar proporsional & detail sempurna
+═══════════════════════════════════════════════════════════ */
 const PIECE_SVG = {
-  wK:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.5 11.63V6M20 8h5" stroke-linejoin="miter"/><path d="M22.5 25s4.5-7.5 3-10.5c0 0-1-2.5-3-2.5s-3 2.5-3 2.5c-1.5 3 3 10.5 3 10.5" fill="#fff" stroke-linecap="butt" stroke-linejoin="miter"/><path d="M11.5 37c5.5 3.5 15.5 3.5 21 0v-7s9-4.5 6-10.5c-4-6.5-13.5-3.5-16 4V17s-5.5-5-9-2c-3.5 2.5-2.5 8.5-2.5 8.5C11.5 33 11.5 37 11.5 37z" fill="#fff"/><path d="M11.5 30c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0"/></g></svg>`,
-  bK:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.5 11.63V6M20 8h5" stroke-linejoin="miter"/><path d="M22.5 25s4.5-7.5 3-10.5c0 0-1-2.5-3-2.5s-3 2.5-3 2.5c-1.5 3 3 10.5 3 10.5" fill="#000" stroke-linecap="butt" stroke-linejoin="miter"/><path d="M11.5 37c5.5 3.5 15.5 3.5 21 0v-7s9-4.5 6-10.5c-4-6.5-13.5-3.5-16 4V17s-5.5-5-9-2c-3.5 2.5-2.5 8.5-2.5 8.5C11.5 33 11.5 37 11.5 37z" fill="#000"/><path d="M11.5 30c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0" stroke="#fff"/></g></svg>`,
-  wQ:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM24.5 7.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM41 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 8.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM33 8.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/><path d="M9 26c8.5-8.5 15.5-4 18 2L9 26zM15 2c0 0 1.5 6 6.5 9.5H23C28 8 30.5 2 30.5 2"/><path d="M9 26c0 2 1.5 2 2.5 4 1 1.5 1 1 .5 3.5-1.5 1-1.5 2.5-1.5 2.5-1.5 1.5.5 2.5.5 2.5 6.5 1 16.5 1 23 0 0 0 1.5-1 0-2.5 0 0 .5-1.5-1-2.5-.5-2.5-.5-2 .5-3.5 1-2 2.5-2 2.5-4 0-2-1.5-2-1.5-2H10.5S9 24 9 26z"/><path d="M11.5 30h22M12 33.5h21M13 37h19" stroke="#000"/></g></svg>`,
-  bQ:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g fill="#000" stroke="none"><circle cx="6" cy="12" r="2.75"/><circle cx="14" cy="9" r="2.75"/><circle cx="22.5" cy="8" r="2.75"/><circle cx="31" cy="9" r="2.75"/><circle cx="39" cy="12" r="2.75"/></g><path d="M9 26c8.5-8.5 15.5-4 18 2L9 26zm0 0c0 2 1.5 2 2.5 4 1 1.5 1 1 .5 3.5-1.5 1-1.5 2.5-1.5 2.5-1.5 1.5.5 2.5.5 2.5 6.5 1 16.5 1 23 0 0 0 1.5-1 0-2.5 0 0 .5-1.5-1-2.5-.5-2.5-.5-2 .5-3.5 1-2 2.5-2 2.5-4 0-2-1.5-2-1.5-2H10.5S9 24 9 26z" fill="#000"/><path d="M11.5 30h22m-21.5 3.5h21M13 37h19" stroke="#fff"/></g></svg>`,
-  wR:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 39h27v-3H9v3zm3.5-7l1.5-2.5h17l1.5 2.5h-20zm-.5 4v-4h21v4H12z" stroke-linecap="butt"/><path d="M14 29.5v-13h17v13H14z" stroke-linecap="butt" stroke-linejoin="miter"/><path d="M14 16.5L11 14h23l-3 2.5H14zM11 14V9h4v2h5V9h5v2h5V9h4v5H11z" stroke-linecap="butt"/><path d="M12 35.5h21m-20-4h19m-18-2h17" fill="none" stroke="#000"/></g></svg>`,
-  bR:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 39h27v-3H9v3zm3.5-7l1.5-2.5h17l1.5 2.5h-20zm-.5 4v-4h21v4H12z" stroke-linecap="butt" fill="#000"/><path d="M14 29.5v-13h17v13H14z" stroke-linecap="butt" stroke-linejoin="miter" fill="#000"/><path d="M14 16.5L11 14h23l-3 2.5H14zM11 14V9h4v2h5V9h5v2h5V9h4v5H11z" stroke-linecap="butt" fill="#000"/><path d="M12 35.5h21m-20-4h19m-18-2h17" fill="none" stroke="#fff"/></g></svg>`,
-  wB:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g fill="#fff" stroke-linecap="butt"><path d="M9 36c3.39-.97 10.11.43 13.5-2 3.39 2.43 10.11 1.03 13.5 2 0 0 1.65.54 3 2-.68.97-1.65.99-3 .5-3.39-.97-10.11.46-13.5-1-3.39 1.46-10.11.03-13.5 1-1.354.49-2.323.47-3-.5 1.354-1.94 3-2 3-2z"/><path d="M15 32c2.5 2.5 12.5 2.5 15 0 .5-1.5 0-2 0-2 0-2.5-2.5-4-2.5-4 5.5-1.5 6-11.5-5-15.5-11 4-10.5 14-5 15.5 0 0-2.5 1.5-2.5 4 0 0-.5.5 0 2z"/><path d="M25 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/></g><path d="M17.5 26h10M15 30h15m-7.5-14.5v5M20 18h5" stroke-linejoin="miter"/></g></svg>`,
-  bB:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g fill="#000" stroke-linecap="butt"><path d="M9 36c3.39-.97 10.11.43 13.5-2 3.39 2.43 10.11 1.03 13.5 2 0 0 1.65.54 3 2-.68.97-1.65.99-3 .5-3.39-.97-10.11.46-13.5-1-3.39 1.46-10.11.03-13.5 1-1.354.49-2.323.47-3-.5 1.354-1.94 3-2 3-2z"/><path d="M15 32c2.5 2.5 12.5 2.5 15 0 .5-1.5 0-2 0-2 0-2.5-2.5-4-2.5-4 5.5-1.5 6-11.5-5-15.5-11 4-10.5 14-5 15.5 0 0-2.5 1.5-2.5 4 0 0-.5.5 0 2z"/><path d="M25 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/></g><path d="M17.5 26h10M15 30h15m-7.5-14.5v5M20 18h5" stroke="#fff" stroke-linejoin="miter"/></g></svg>`,
-  wN:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10c10.5 1 16.5 8 16 29H15c0-9 10-6.5 8-21" fill="#fff"/><path d="M24 18c.38 5.12-4 7-7.5 8.5-4.5 1.5-5.5 4.5-5.5 4.5-3 2-3.5 4.5-2 7 0 1 2.5 3 8 3 6.5 0 13 0 16-2 2-1 4-3 4-5 0-6.5-4-8-2-17C36.5 11 34.5 4 28 5c-4.5 0-4.5 3-4 5z" fill="#fff"/><path d="M9.5 25.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" fill="#000"/><path d="M14.933 15.75a.5 1.5 30 1 1-.866-.5.5 1.5 30 0 1 .866.5z" fill="#000"/></g></svg>`,
-  bN:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10c10.5 1 16.5 8 16 29H15c0-9 10-6.5 8-21" fill="#000"/><path d="M24 18c.38 5.12-4 7-7.5 8.5-4.5 1.5-5.5 4.5-5.5 4.5-3 2-3.5 4.5-2 7 0 1 2.5 3 8 3 6.5 0 13 0 16-2 2-1 4-3 4-5 0-6.5-4-8-2-17C36.5 11 34.5 4 28 5c-4.5 0-4.5 3-4 5z" fill="#000"/><path d="M9.5 25.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" fill="#fff"/><path d="M14.933 15.75a.5 1.5 30 1 1-.866-.5.5 1.5 30 0 1 .866.5z" fill="#fff"/></g></svg>`,
-  wP:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><path d="M22.5 9c-2.21 0-4 1.79-4 4 0 .89.29 1.71.78 2.38C17.33 16.5 16 18.59 16 21c0 2.03.94 3.84 2.41 5.03C15.41 27.09 11 31.58 11 39.5H34c0-7.92-4.41-12.41-7.41-13.47C28.06 24.84 29 23.03 29 21c0-2.41-1.33-4.5-3.28-5.62.49-.67.78-1.49.78-2.38 0-2.21-1.79-4-4-4z" fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-  bP:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45"><path d="M22.5 9c-2.21 0-4 1.79-4 4 0 .89.29 1.71.78 2.38C17.33 16.5 16 18.59 16 21c0 2.03.94 3.84 2.41 5.03C15.41 27.09 11 31.58 11 39.5H34c0-7.92-4.41-12.41-7.41-13.47C28.06 24.84 29 23.03 29 21c0-2.41-1.33-4.5-3.28-5.62.49-.67.78-1.49.78-2.38 0-2.21-1.79-4-4-4z" fill="#000" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+
+  /* ── RAJA PUTIH ── */
+  wK:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- salib -->
+    <path d="M22.5 11.63V6" stroke-linejoin="miter"/>
+    <path d="M20 8h5"       stroke-linejoin="miter"/>
+    <!-- badan atas -->
+    <path d="M22.5 25
+             c0 0 4.5-7.5 3-10.5
+             c0 0-1-2.5-3-2.5
+             s-3 2.5-3 2.5
+             c-1.5 3 3 10.5 3 10.5"
+          fill="#fff" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <!-- jubah -->
+    <path d="M12.5 37
+             c5.5 3.5 14.5 3.5 20 0
+             v-7
+             c0 0 9-4.5 6-10.5
+             c-4-6.5-13.5-3.5-16 4
+             V17
+             c0 0-5.5-5-9-2
+             c-3.5 2.5-2.5 8.5-2.5 8.5
+             C11.5 33 12.5 37 12.5 37z"
+          fill="#fff"/>
+    <!-- garis dekorasi jubah -->
+    <path d="M12.5 30 c5.5-3 14.5-3 20 0"/>
+    <path d="M12.5 33.5 c5.5-3 14.5-3 20 0"/>
+    <path d="M12.5 37   c5.5-3 14.5-3 20 0"/>
+  </g></svg>`,
+
+  /* ── RAJA HITAM ── */
+  bK:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22.5 11.63V6" stroke-linejoin="miter"/>
+    <path d="M20 8h5"       stroke-linejoin="miter"/>
+    <path d="M22.5 25
+             c0 0 4.5-7.5 3-10.5
+             c0 0-1-2.5-3-2.5
+             s-3 2.5-3 2.5
+             c-1.5 3 3 10.5 3 10.5"
+          fill="#000" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <path d="M12.5 37
+             c5.5 3.5 14.5 3.5 20 0
+             v-7
+             c0 0 9-4.5 6-10.5
+             c-4-6.5-13.5-3.5-16 4
+             V17
+             c0 0-5.5-5-9-2
+             c-3.5 2.5-2.5 8.5-2.5 8.5
+             C11.5 33 12.5 37 12.5 37z"
+          fill="#000"/>
+    <path d="M12.5 30   c5.5-3 14.5-3 20 0" stroke="#fff"/>
+    <path d="M12.5 33.5 c5.5-3 14.5-3 20 0" stroke="#fff"/>
+    <path d="M12.5 37   c5.5-3 14.5-3 20 0" stroke="#fff"/>
+  </g></svg>`,
+
+  /* ── MENTERI PUTIH ── */
+  wQ:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- 5 bola mahkota -->
+    <circle cx="6"    cy="12"  r="2.75"/>
+    <circle cx="14"   cy="9"   r="2.75"/>
+    <circle cx="22.5" cy="8"   r="2.75"/>
+    <circle cx="31"   cy="9"   r="2.75"/>
+    <circle cx="39"   cy="12"  r="2.75"/>
+    <!-- badan utama berbentuk mahkota -->
+    <path d="M6 12 L9.5 28 h26 L39 12
+             l-8 10 -4.5-14.5 -4.5 14.5 -8-10z"
+          stroke-linecap="butt"/>
+    <!-- bawah -->
+    <path d="M9.5 28
+             c0 2 1.5 2 2.5 4
+             1 1.5 1 1 .5 3.5
+             -1.5 1-1.5 2.5-1.5 2.5
+             -1.5 1.5 .5 2.5 .5 2.5
+             6.5 1 16.5 1 23 0
+             0 0 1.5-1 0-2.5
+             0 0 .5-1.5-1-2.5
+             -.5-2.5-.5-2 .5-3.5
+             1-2 2.5-2 2.5-4"/>
+    <!-- garis dekorasi -->
+    <path d="M11.5 30 h22"  fill="none"/>
+    <path d="M12 33.5 h21"  fill="none"/>
+    <path d="M13 37 h19"    fill="none"/>
+  </g></svg>`,
+
+  /* ── MENTERI HITAM ── */
+  bQ:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="6"    cy="12"  r="2.75"/>
+    <circle cx="14"   cy="9"   r="2.75"/>
+    <circle cx="22.5" cy="8"   r="2.75"/>
+    <circle cx="31"   cy="9"   r="2.75"/>
+    <circle cx="39"   cy="12"  r="2.75"/>
+    <path d="M6 12 L9.5 28 h26 L39 12
+             l-8 10 -4.5-14.5 -4.5 14.5 -8-10z"
+          stroke-linecap="butt"/>
+    <path d="M9.5 28
+             c0 2 1.5 2 2.5 4
+             1 1.5 1 1 .5 3.5
+             -1.5 1-1.5 2.5-1.5 2.5
+             -1.5 1.5 .5 2.5 .5 2.5
+             6.5 1 16.5 1 23 0
+             0 0 1.5-1 0-2.5
+             0 0 .5-1.5-1-2.5
+             -.5-2.5-.5-2 .5-3.5
+             1-2 2.5-2 2.5-4"/>
+    <path d="M11.5 30 h22"  fill="none" stroke="#fff"/>
+    <path d="M12 33.5 h21"  fill="none" stroke="#fff"/>
+    <path d="M13 37 h19"    fill="none" stroke="#fff"/>
+  </g></svg>`,
+
+  /* ── BENTENG PUTIH ── */
+  wR:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 39 h27 v-3 H9 v3z" stroke-linecap="butt"/>
+    <path d="M12.5 32 l1.5-2.5 h17 l1.5 2.5 h-20z" stroke-linecap="butt"/>
+    <path d="M12 29.5 v-13 h21 v13 H12z" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <path d="M14 16.5 L11 14 h23 l-3 2.5 H14z" stroke-linecap="butt"/>
+    <path d="M11 14 V9  h4 v2 h5 V9 h5 v2 h5 V9 h4 v5 H11z" stroke-linecap="butt"/>
+    <path d="M12 35.5 h21 M13 31.5 h19" fill="none" stroke="#000"/>
+  </g></svg>`,
+
+  /* ── BENTENG HITAM ── */
+  bR:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="#000" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 39 h27 v-3 H9 v3z" stroke-linecap="butt"/>
+    <path d="M12.5 32 l1.5-2.5 h17 l1.5 2.5 h-20z" stroke-linecap="butt"/>
+    <path d="M12 29.5 v-13 h21 v13 H12z" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <path d="M14 16.5 L11 14 h23 l-3 2.5 H14z" stroke-linecap="butt"/>
+    <path d="M11 14 V9  h4 v2 h5 V9 h5 v2 h5 V9 h4 v5 H11z" stroke-linecap="butt"/>
+    <path d="M12 35.5 h21 M13 31.5 h19" fill="none" stroke="#fff"/>
+  </g></svg>`,
+
+  /* ── GAJAH PUTIH ── */
+  wB:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <g fill="#fff" stroke-linecap="butt">
+      <path d="M9 36 c3.39-.97 10.11.43 13.5-2
+               c3.39 2.43 10.11 1.03 13.5 2
+               0 0 1.65.54 3 2
+               -.68.97-1.65.99-3 .5
+               -3.39-.97-10.11.46-13.5-1
+               -3.39 1.46-10.11.03-13.5 1
+               -1.354.49-2.323.47-3-.5
+               1.354-1.94 3-2 3-2z"/>
+      <path d="M15 32 c2.5 2.5 12.5 2.5 15 0
+               .5-1.5 0-2 0-2
+               0-2.5-2.5-4-2.5-4
+               5.5-1.5 6-11.5-5-15.5
+               -11 4-10.5 14-5 15.5
+               0 0-2.5 1.5-2.5 4
+               0 0-.5.5 0 2z"/>
+      <circle cx="22.5" cy="8" r="2.5"/>
+    </g>
+    <path d="M17.5 26 h10 M15 30 h15 M22.5 15.5 v5 M20 18 h5"
+          stroke-linejoin="miter"/>
+  </g></svg>`,
+
+  /* ── GAJAH HITAM ── */
+  bB:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <g fill="#000" stroke-linecap="butt">
+      <path d="M9 36 c3.39-.97 10.11.43 13.5-2
+               c3.39 2.43 10.11 1.03 13.5 2
+               0 0 1.65.54 3 2
+               -.68.97-1.65.99-3 .5
+               -3.39-.97-10.11.46-13.5-1
+               -3.39 1.46-10.11.03-13.5 1
+               -1.354.49-2.323.47-3-.5
+               1.354-1.94 3-2 3-2z"/>
+      <path d="M15 32 c2.5 2.5 12.5 2.5 15 0
+               .5-1.5 0-2 0-2
+               0-2.5-2.5-4-2.5-4
+               5.5-1.5 6-11.5-5-15.5
+               -11 4-10.5 14-5 15.5
+               0 0-2.5 1.5-2.5 4
+               0 0-.5.5 0 2z"/>
+      <circle cx="22.5" cy="8" r="2.5"/>
+    </g>
+    <path d="M17.5 26 h10 M15 30 h15 M22.5 15.5 v5 M20 18 h5"
+          stroke="#fff" stroke-linejoin="miter"/>
+  </g></svg>`,
+
+  /* ── KUDA PUTIH ── */
+  wN:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- tubuh utama kuda -->
+    <path d="M22 10
+             c10.5 1 16.5 8 16 29
+             H15
+             c0-9 10-6.5 8-21"
+          fill="#fff"/>
+    <!-- kepala & leher -->
+    <path d="M24 18
+             c.38 5.12-4 7-7.5 8.5
+             -4.5 1.5-5.5 4.5-5.5 4.5
+             -3 2-3.5 4.5-2 7
+             0 1 2.5 3 8 3
+             6.5 0 13 0 16-2
+             2-1 4-3 4-5
+             0-6.5-4-8-2-17"
+          fill="#fff"/>
+    <!-- hidung / moncong -->
+    <path d="M9.5 25.5
+             a.5.5 0 1 1-1 0
+             a.5.5 0 0 1 1 0z"
+          fill="#000" stroke="#000"/>
+    <!-- mata -->
+    <path d="M14.933 15.75
+             a.5 1.5 30 1 1-.866-.5
+             .5 1.5 30 0 1 .866.5z"
+          fill="#000" stroke="#000"/>
+    <!-- highlight mata -->
+    <path d="M15 16
+             c.35-.28.9-.28 1.3 0
+             .35.25.47.7.35 1.1
+             -.15.55-.58 1-1.25 1.1"
+          fill="#fff" stroke="none"/>
+    <!-- surai -->
+    <path d="M12 36.5
+             c2-4 5-6.5 8-7
+             3.5-.5 5-2.5 5.5-5
+             .5-2.5-.5-5-2-7"
+          fill="none" stroke="#000" stroke-width="1"/>
+  </g></svg>`,
+
+  /* ── KUDA HITAM ── */
+  bN:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <g fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 10
+             c10.5 1 16.5 8 16 29
+             H15
+             c0-9 10-6.5 8-21"
+          fill="#000"/>
+    <path d="M24 18
+             c.38 5.12-4 7-7.5 8.5
+             -4.5 1.5-5.5 4.5-5.5 4.5
+             -3 2-3.5 4.5-2 7
+             0 1 2.5 3 8 3
+             6.5 0 13 0 16-2
+             2-1 4-3 4-5
+             0-6.5-4-8-2-17"
+          fill="#000"/>
+    <path d="M9.5 25.5
+             a.5.5 0 1 1-1 0
+             a.5.5 0 0 1 1 0z"
+          fill="#fff" stroke="#fff"/>
+    <path d="M14.933 15.75
+             a.5 1.5 30 1 1-.866-.5
+             .5 1.5 30 0 1 .866.5z"
+          fill="#fff" stroke="#fff"/>
+    <path d="M15 16
+             c.35-.28.9-.28 1.3 0
+             .35.25.47.7.35 1.1
+             -.15.55-.58 1-1.25 1.1"
+          fill="#000" stroke="none"/>
+    <path d="M12 36.5
+             c2-4 5-6.5 8-7
+             3.5-.5 5-2.5 5.5-5
+             .5-2.5-.5-5-2-7"
+          fill="none" stroke="#fff" stroke-width="1"/>
+  </g></svg>`,
+
+  /* ── PION PUTIH ── */
+  wP:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <path d="M22.5 9
+           c-2.21 0-4 1.79-4 4
+           0 .89.29 1.71.78 2.38
+           C17.33 16.5 16 18.59 16 21
+           c0 2.03.94 3.84 2.41 5.03
+           C15.41 27.09 11 31.58 11 39.5
+           H34
+           c0-7.92-4.41-12.41-7.41-13.47
+           C28.06 24.84 29 23.03 29 21
+           c0-2.41-1.33-4.5-3.28-5.62
+           .49-.67.78-1.49.78-2.38
+           0-2.21-1.79-4-4-4z"
+        fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+
+  /* ── PION HITAM ── */
+  bP:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <path d="M22.5 9
+           c-2.21 0-4 1.79-4 4
+           0 .89.29 1.71.78 2.38
+           C17.33 16.5 16 18.59 16 21
+           c0 2.03.94 3.84 2.41 5.03
+           C15.41 27.09 11 31.58 11 39.5
+           H34
+           c0-7.92-4.41-12.41-7.41-13.47
+           C28.06 24.84 29 23.03 29 21
+           c0-2.41-1.33-4.5-3.28-5.62
+           .49-.67.78-1.49.78-2.38
+           0-2.21-1.79-4-4-4z"
+        fill="#000" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
 };
 
 function svgDataUrl(key) {
@@ -382,18 +620,12 @@ function svgDataUrl(key) {
   if (!svg) return "";
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 }
-
-function pieceKey(pieceChar) {
-  const color = pieceChar === pieceChar.toUpperCase() ? "w" : "b";
-  const type = pieceChar.toUpperCase();
-  return color + type;
+function pieceKey(ch) {
+  return (ch === ch.toUpperCase() ? "w" : "b") + ch.toUpperCase();
 }
 
-/* ═══════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════ */
+/* ═══════════════ STATE ═══════════════ */
 const FILES = "abcdefgh";
-
 const state = {
   game: null,
   boardFlipped: false,
@@ -407,71 +639,65 @@ const state = {
   pvLines: new Map(),
   lastFrom: "",
   lastTo: "",
-  // promotion pending
-  promoFrom: "",
-  promoTo: "",
-  promoResolve: null,
-  stats: { depth:"-", seldepth:"-", nodes:"-", nps:"-", time:"-", hashfull:"-", acpl:"-" },
+  _draggingFrom: "",
+  stats: { depth:"-",seldepth:"-",nodes:"-",nps:"-",time:"-",hashfull:"-",acpl:"-" },
 };
 
 const ui = {
-  board:         document.getElementById("board"),
-  coordRanks:    document.getElementById("coordRanks"),
-  coordFiles:    document.getElementById("coordFiles"),
-  statusText:    document.getElementById("statusText"),
-  bestmoveText:  document.getElementById("bestmoveText"),
-  evalFill:      document.getElementById("evalFill"),
-  evalText:      document.getElementById("evalText"),
-  acplText:      document.getElementById("acplText"),
-  pvPanel:       document.getElementById("pvPanel"),
-  statsText:     document.getElementById("statsText"),
-  historyPanel:  document.getElementById("historyPanel"),
-  fenInput:      document.getElementById("fenInput"),
-  logPanel:      document.getElementById("logPanel"),
-  depthInput:    document.getElementById("depthInput"),
-  moveTimeInput: document.getElementById("moveTimeInput"),
-  multiPVInput:  document.getElementById("multiPVInput"),
-  pvFormatInput: document.getElementById("pvFormatInput"),
-  strengthInput: document.getElementById("strengthInput"),
-  skillInput:    document.getElementById("skillInput"),
-  hashInput:     document.getElementById("hashInput"),
-  overheadInput: document.getElementById("overheadInput"),
-  queenSafetyInput: document.getElementById("queenSafetyInput"),
-  showWdlInput:  document.getElementById("showWdlInput"),
-  showAcplInput: document.getElementById("showAcplInput"),
-  ponderInput:   document.getElementById("ponderInput"),
-  dragGhost:     document.getElementById("dragGhost"),
-  promoModal:    document.getElementById("promoModal"),
-  promoChoices:  document.getElementById("promoChoices"),
+  board:           document.getElementById("board"),
+  coordRanks:      document.getElementById("coordRanks"),
+  coordFiles:      document.getElementById("coordFiles"),
+  statusText:      document.getElementById("statusText"),
+  bestmoveText:    document.getElementById("bestmoveText"),
+  evalFill:        document.getElementById("evalFill"),
+  evalText:        document.getElementById("evalText"),
+  acplText:        document.getElementById("acplText"),
+  pvPanel:         document.getElementById("pvPanel"),
+  statsText:       document.getElementById("statsText"),
+  historyPanel:    document.getElementById("historyPanel"),
+  fenInput:        document.getElementById("fenInput"),
+  logPanel:        document.getElementById("logPanel"),
+  depthInput:      document.getElementById("depthInput"),
+  moveTimeInput:   document.getElementById("moveTimeInput"),
+  multiPVInput:    document.getElementById("multiPVInput"),
+  pvFormatInput:   document.getElementById("pvFormatInput"),
+  strengthInput:   document.getElementById("strengthInput"),
+  skillInput:      document.getElementById("skillInput"),
+  hashInput:       document.getElementById("hashInput"),
+  overheadInput:   document.getElementById("overheadInput"),
+  queenSafetyInput:document.getElementById("queenSafetyInput"),
+  showWdlInput:    document.getElementById("showWdlInput"),
+  showAcplInput:   document.getElementById("showAcplInput"),
+  ponderInput:     document.getElementById("ponderInput"),
+  dragGhost:       document.getElementById("dragGhost"),
+  promoModal:      document.getElementById("promoModal"),
+  promoChoices:    document.getElementById("promoChoices"),
 };
 
-/* ═══════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════ */
+/* ═══════════════ HELPERS ═══════════════ */
 function setStatus(t) { ui.statusText.textContent = "Status: " + t; }
 function addLog(line) {
-  ui.logPanel.textContent = (line + "\n" + ui.logPanel.textContent).slice(0, 30000);
+  ui.logPanel.textContent = (line + "\n" + ui.logPanel.textContent).slice(0,30000);
 }
 
 function fenToPieceMap(fen) {
   const map = {};
-  const rows = (fen.split(" ")[0] || "").split("/");
-  for (let r = 0; r < 8; r++) {
-    let file = 0;
-    for (const ch of (rows[r] || "")) {
-      const n = +ch;
-      if (n >= 1 && n <= 8) { file += n; continue; }
-      map[FILES[file] + (8 - r)] = ch;
-      file++;
+  const rows = (fen.split(" ")[0]||"").split("/");
+  for (let r=0;r<8;r++) {
+    let fi=0;
+    for (const ch of (rows[r]||"")) {
+      const n=+ch;
+      if(n>=1&&n<=8){fi+=n;continue;}
+      map[FILES[fi]+(8-r)]=ch; fi++;
     }
   }
   return map;
 }
 
-function squareAt(displayRow, displayCol) {
-  const rank = state.boardFlipped ? displayRow + 1 : 8 - displayRow;
-  const fi   = state.boardFlipped ? 7 - displayCol : displayCol;
-  return FILES[fi] + rank;
+function squareAt(dr,dc) {
+  const rank = state.boardFlipped ? dr+1 : 8-dr;
+  const fi   = state.boardFlipped ? 7-dc  : dc;
+  return FILES[fi]+rank;
 }
 
 function canInteract() {
@@ -481,600 +707,432 @@ function canInteract() {
 }
 
 function isOwnPiece(sq) {
-  const pm = fenToPieceMap(state.game.fen());
-  const p = pm[sq]; if (!p) return false;
-  return (p === p.toUpperCase() ? "w" : "b") === state.game.turn();
+  const p = fenToPieceMap(state.game.fen())[sq];
+  if (!p) return false;
+  return (p===p.toUpperCase()?"w":"b") === state.game.turn();
 }
 
 function isGameOver() {
-  return typeof state.game.game_over === "function" ? state.game.game_over() : false;
+  return typeof state.game.game_over==="function" ? state.game.game_over() : false;
 }
 
-function engineColor() { return state.humanColor === "w" ? "b" : "w"; }
+function engineColor() { return state.humanColor==="w"?"b":"w"; }
 
-function isPawnPromotion(from, to, pm) {
-  const p = pm[from];
-  if (!p) return false;
-  const toRank = to[1];
-  return (p === "P" && toRank === "8") || (p === "p" && toRank === "1");
+function isPawnPromo(from,to,pm) {
+  const p=pm[from]; if(!p) return false;
+  return (p==="P"&&to[1]==="8")||(p==="p"&&to[1]==="1");
 }
 
-/* ═══════════════════════════════════════════
-   PROMOTION DIALOG
-═══════════════════════════════════════════ */
+/* ═══════════════ PROMOTION ═══════════════ */
 function showPromoDialog(color) {
-  return new Promise((resolve) => {
-    const pieces = ["q","r","b","n"];
-    ui.promoChoices.innerHTML = "";
-    for (const p of pieces) {
-      const key = color + p.toUpperCase();
-      const btn = document.createElement("button");
-      const img = document.createElement("img");
-      img.src = svgDataUrl(key);
-      img.style.cssText = "width:64px;height:64px;pointer-events:none;";
+  return new Promise(resolve=>{
+    ui.promoChoices.innerHTML="";
+    for(const p of ["q","r","b","n"]){
+      const key=color+p.toUpperCase();
+      const btn=document.createElement("button");
+      const img=document.createElement("img");
+      img.src=svgDataUrl(key);
+      img.style.cssText="width:64px;height:64px;pointer-events:none;";
       btn.appendChild(img);
-      btn.onclick = () => {
-        ui.promoModal.classList.remove("show");
-        resolve(p);
-      };
+      btn.onclick=()=>{ ui.promoModal.classList.remove("show"); resolve(p); };
       ui.promoChoices.appendChild(btn);
     }
     ui.promoModal.classList.add("show");
   });
 }
 
-/* ═══════════════════════════════════════════
-   LEGAL TARGETS
-═══════════════════════════════════════════ */
+/* ═══════════════ LEGAL TARGETS ═══════════════ */
 function getLegalTargets(from) {
-  const targets = [];
-  for (let r = 1; r <= 8; r++) {
-    for (let fi = 0; fi < 8; fi++) {
-      const to = FILES[fi] + r;
-      const m = state.game.move({ from, to, promotion: "q" });
-      if (m) { targets.push({ to, flags: m.flags }); state.game.undo(); }
-    }
+  const targets=[];
+  for(let r=1;r<=8;r++) for(let fi=0;fi<8;fi++){
+    const to=FILES[fi]+r;
+    const m=state.game.move({from,to,promotion:"q"});
+    if(m){targets.push({to,flags:m.flags});state.game.undo();}
   }
   return targets;
 }
 
-/* ═══════════════════════════════════════════
-   BOARD BUILD & RENDER
-═══════════════════════════════════════════ */
+/* ═══════════════ BUILD & RENDER BOARD ═══════════════ */
 function buildBoard() {
-  ui.board.innerHTML = "";
+  ui.board.innerHTML="";
+  ui.coordRanks.innerHTML="";
+  ui.coordFiles.innerHTML="";
 
-  // Coordinate strips
-  ui.coordRanks.innerHTML = "";
-  ui.coordFiles.innerHTML = "";
-  for (let i = 0; i < 8; i++) {
-    const rs = document.createElement("span");
-    rs.textContent = state.boardFlipped ? String(i + 1) : String(8 - i);
+  for(let i=0;i<8;i++){
+    const rs=document.createElement("span");
+    rs.textContent=state.boardFlipped?String(i+1):String(8-i);
     ui.coordRanks.appendChild(rs);
 
-    const fs = document.createElement("span");
-    fs.textContent = FILES[state.boardFlipped ? 7 - i : i];
+    const fs=document.createElement("span");
+    fs.textContent=FILES[state.boardFlipped?7-i:i];
     ui.coordFiles.appendChild(fs);
   }
 
-  for (let r = 0; r < 8; r++) {
-    for (let c = 0; c < 8; c++) {
-      const sq = squareAt(r, c);
-      const light = (r + c) % 2 === 0;
-      const cell = document.createElement("div");
-      cell.className = "sq " + (light ? "light" : "dark");
-      cell.dataset.sq = sq;
-
-      // legal dot placeholder
-      const dot = document.createElement("div");
-      dot.className = "legal-dot";
-      cell.appendChild(dot);
-
-      // pointer events
-      cell.addEventListener("pointerdown", onPointerDown);
-      cell.addEventListener("pointerenter", onPointerEnter);
-      cell.addEventListener("pointerup", onPointerUp);
-
-      ui.board.appendChild(cell);
-    }
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const sq=squareAt(r,c);
+    const light=(r+c)%2===0;
+    const cell=document.createElement("div");
+    cell.className="sq "+(light?"light":"dark");
+    cell.dataset.sq=sq;
+    const dot=document.createElement("div");
+    dot.className="legal-dot";
+    cell.appendChild(dot);
+    cell.addEventListener("pointerdown",onPointerDown);
+    cell.addEventListener("pointerenter",onPointerEnter);
+    cell.addEventListener("pointerup",onPointerUp);
+    ui.board.appendChild(cell);
   }
   renderBoard();
 }
 
 function renderBoard() {
-  const fen = state.game.fen();
-  const pm  = fenToPieceMap(fen);
-  ui.fenInput.value = fen;
+  const fen=state.game.fen();
+  const pm=fenToPieceMap(fen);
+  ui.fenInput.value=fen;
 
-  const legalSet   = new Set(state.legalTargets.map(m => m.to));
-  const captureSet = new Set(state.legalTargets.filter(m => m.flags.includes("c") || m.flags.includes("e")).map(m => m.to));
+  const legalSet  =new Set(state.legalTargets.map(m=>m.to));
+  const captureSet=new Set(state.legalTargets.filter(m=>m.flags.includes("c")||m.flags.includes("e")).map(m=>m.to));
 
-  // find king in check
-  let checkKingSq = "";
-  if (state.game.in_check && state.game.in_check()) {
-    const turn = state.game.turn();
-    for (const [sq, p] of Object.entries(pm)) {
-      if (p === (turn === "w" ? "K" : "k")) { checkKingSq = sq; break; }
-    }
+  let checkSq="";
+  if(state.game.in_check&&state.game.in_check()){
+    const t=state.game.turn();
+    for(const [sq,p] of Object.entries(pm))
+      if(p===(t==="w"?"K":"k")){checkSq=sq;break;}
   }
 
-  const cells = ui.board.querySelectorAll(".sq");
-  cells.forEach(cell => {
-    const sq = cell.dataset.sq;
+  ui.board.querySelectorAll(".sq").forEach(cell=>{
+    const sq=cell.dataset.sq;
+    cell.classList.toggle("sel",       sq===state.selected);
+    cell.classList.toggle("legal",     legalSet.has(sq)&&!captureSet.has(sq));
+    cell.classList.toggle("capture",   captureSet.has(sq));
+    cell.classList.toggle("last-from", sq===state.lastFrom&&sq!==state.selected);
+    cell.classList.toggle("last-to",   sq===state.lastTo  &&sq!==state.selected);
+    cell.classList.toggle("in-check",  sq===checkSq);
 
-    // classes
-    cell.classList.toggle("sel",
-      sq === state.selected);
-    cell.classList.toggle("legal",
-      legalSet.has(sq) && !captureSet.has(sq));
-    cell.classList.toggle("capture",
-      captureSet.has(sq));
-    cell.classList.toggle("last-from",
-      sq === state.lastFrom && sq !== state.selected);
-    cell.classList.toggle("last-to",
-      sq === state.lastTo && sq !== state.selected);
-    cell.classList.toggle("in-check",
-      sq === checkKingSq);
+    const oldImg=cell.querySelector("img.piece");
+    const pchar=pm[sq];
+    if(!pchar){ if(oldImg)oldImg.remove(); return; }
 
-    // piece
-    const oldPiece = cell.querySelector("img.piece");
-    const pchar = pm[sq];
-
-    if (!pchar) {
-      if (oldPiece) oldPiece.remove();
-      return;
-    }
-
-    const key = pieceKey(pchar);
-    const src = svgDataUrl(key);
-
-    if (oldPiece) {
-      if (oldPiece.dataset.key !== key) {
-        oldPiece.src = src;
-        oldPiece.dataset.key = key;
-      }
-      oldPiece.classList.toggle("dragging", sq === state._draggingFrom);
+    const key=pieceKey(pchar);
+    const src=svgDataUrl(key);
+    if(oldImg){
+      if(oldImg.dataset.key!==key){oldImg.src=src;oldImg.dataset.key=key;}
+      oldImg.classList.toggle("dragging",sq===state._draggingFrom);
     } else {
-      const img = document.createElement("img");
-      img.className = "piece";
-      img.dataset.key = key;
-      img.src = src;
-      img.alt = key;
-      img.draggable = false;
+      const img=document.createElement("img");
+      img.className="piece";
+      img.dataset.key=key;
+      img.src=src; img.alt=key; img.draggable=false;
       cell.appendChild(img);
     }
-
-    if (oldPiece) {
-      oldPiece.classList.toggle("dragging", sq === state._draggingFrom);
-    }
   });
-
   renderHistory();
 }
 
-function renderHistory() {
-  const h = state.game.history();
-  if (!h.length) { ui.historyPanel.textContent = "—"; return; }
-  const rows = [];
-  for (let i = 0; i < h.length; i += 2)
-    rows.push((i/2+1) + ". " + h[i] + (h[i+1] ? " " + h[i+1] : ""));
-  ui.historyPanel.textContent = rows.join("\n");
-  ui.historyPanel.scrollTop = ui.historyPanel.scrollHeight;
+function renderHistory(){
+  const h=state.game.history();
+  if(!h.length){ui.historyPanel.textContent="—";return;}
+  const rows=[];
+  for(let i=0;i<h.length;i+=2)
+    rows.push((i/2+1)+". "+h[i]+(h[i+1]?" "+h[i+1]:""));
+  ui.historyPanel.textContent=rows.join("\n");
+  ui.historyPanel.scrollTop=ui.historyPanel.scrollHeight;
 }
 
-/* ═══════════════════════════════════════════
-   POINTER DRAG SYSTEM
-═══════════════════════════════════════════ */
-let _dragSq = "";
-let _dragActive = false;
-let _lastEnterSq = "";
+/* ═══════════════ DRAG ═══════════════ */
+let _dragSq="",_dragActive=false,_lastEnterSq="";
 
-function onPointerDown(e) {
-  const sq = e.currentTarget.dataset.sq;
-  if (!canInteract()) return;
-  if (!isOwnPiece(sq)) {
-    // clicking on legal target = move
-    if (state.selected && state.legalTargets.some(m => m.to === sq)) {
-      tryMove(state.selected, sq);
+function onPointerDown(e){
+  const sq=e.currentTarget.dataset.sq;
+  if(!canInteract()) return;
+  if(!isOwnPiece(sq)){
+    if(state.selected&&state.legalTargets.some(m=>m.to===sq)){
+      tryMove(state.selected,sq);
     } else {
-      state.selected = "";
-      state.legalTargets = [];
-      renderBoard();
+      state.selected=""; state.legalTargets=[]; renderBoard();
     }
     return;
   }
-
-  // start drag
-  _dragSq = sq;
-  _dragActive = false;
-  _lastEnterSq = sq;
-  state._draggingFrom = sq;
-
+  _dragSq=sq; _dragActive=false; _lastEnterSq=sq;
+  state._draggingFrom=sq;
   e.currentTarget.setPointerCapture(e.pointerId);
-
-  // show ghost
-  const pm = fenToPieceMap(state.game.fen());
-  const pchar = pm[sq];
-  if (pchar) {
-    ui.dragGhost.src = svgDataUrl(pieceKey(pchar));
-    ui.dragGhost.style.display = "block";
-    ui.dragGhost.style.width  = "72px";
-    ui.dragGhost.style.height = "72px";
-    moveDragGhost(e.clientX, e.clientY);
+  const pchar=fenToPieceMap(state.game.fen())[sq];
+  if(pchar){
+    ui.dragGhost.src=svgDataUrl(pieceKey(pchar));
+    ui.dragGhost.style.display="block";
+    moveDragGhost(e.clientX,e.clientY);
   }
-
-  // select
-  state.selected = sq;
-  state.legalTargets = getLegalTargets(sq);
+  state.selected=sq;
+  state.legalTargets=getLegalTargets(sq);
   renderBoard();
 }
 
-function onPointerEnter(e) {
-  if (!_dragSq) return;
-  _lastEnterSq = e.currentTarget.dataset.sq;
-  _dragActive = true;
+function onPointerEnter(e){
+  if(!_dragSq) return;
+  _lastEnterSq=e.currentTarget.dataset.sq;
+  _dragActive=true;
 }
 
-function onPointerUp(e) {
-  ui.dragGhost.style.display = "none";
-  state._draggingFrom = "";
-
-  if (!_dragSq) return;
-
-  const from = _dragSq;
-  const to   = _dragActive ? _lastEnterSq : e.currentTarget.dataset.sq;
-  _dragSq = "";
-  _dragActive = false;
-
-  if (from === to) {
-    // just a click-select (already set in pointerdown)
-    renderBoard();
-    return;
-  }
-
-  if (to && state.legalTargets.some(m => m.to === to)) {
-    tryMove(from, to);
-  } else {
-    state.selected = from;
-    renderBoard();
-  }
+function onPointerUp(e){
+  ui.dragGhost.style.display="none";
+  state._draggingFrom="";
+  if(!_dragSq) return;
+  const from=_dragSq;
+  const to=_dragActive?_lastEnterSq:e.currentTarget.dataset.sq;
+  _dragSq=""; _dragActive=false;
+  if(from===to){renderBoard();return;}
+  if(to&&state.legalTargets.some(m=>m.to===to)) tryMove(from,to);
+  else {state.selected=from;renderBoard();}
 }
 
-function moveDragGhost(cx, cy) {
-  ui.dragGhost.style.left = cx + "px";
-  ui.dragGhost.style.top  = cy + "px";
+function moveDragGhost(cx,cy){
+  ui.dragGhost.style.left=cx+"px";
+  ui.dragGhost.style.top=cy+"px";
 }
 
-document.addEventListener("pointermove", e => {
-  if (_dragSq) moveDragGhost(e.clientX, e.clientY);
-});
-document.addEventListener("pointerup", e => {
-  if (!_dragSq) return;
-  ui.dragGhost.style.display = "none";
-  state._draggingFrom = "";
-
-  // figure out target square from element
-  const el = document.elementFromPoint(e.clientX, e.clientY);
-  const cell = el && (el.classList.contains("sq") ? el : el.closest(".sq"));
-  const to = cell ? cell.dataset.sq : "";
-  const from = _dragSq;
-  _dragSq = ""; _dragActive = false;
-  if (to && to !== from && state.legalTargets.some(m => m.to === to)) {
-    tryMove(from, to);
-  } else {
-    renderBoard();
-  }
+document.addEventListener("pointermove",e=>{if(_dragSq)moveDragGhost(e.clientX,e.clientY);});
+document.addEventListener("pointerup",e=>{
+  if(!_dragSq) return;
+  ui.dragGhost.style.display="none";
+  state._draggingFrom="";
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  const cell=el&&(el.classList.contains("sq")?el:el.closest(".sq"));
+  const to=cell?cell.dataset.sq:"";
+  const from=_dragSq; _dragSq=""; _dragActive=false;
+  if(to&&to!==from&&state.legalTargets.some(m=>m.to===to)) tryMove(from,to);
+  else renderBoard();
 });
 
-/* ═══════════════════════════════════════════
-   MOVE EXECUTION
-═══════════════════════════════════════════ */
-async function tryMove(from, to) {
-  const pm = fenToPieceMap(state.game.fen());
-
-  let promotion = "q";
-  if (isPawnPromotion(from, to, pm)) {
-    const color = state.game.turn();
-    promotion = await showPromoDialog(color);
-  }
-
-  const move = state.game.move({ from, to, promotion });
-  if (!move) return false;
-
-  state.lastFrom = from;
-  state.lastTo   = to;
-  state.selected = "";
-  state.legalTargets = [];
+/* ═══════════════ MOVE ═══════════════ */
+async function tryMove(from,to){
+  const pm=fenToPieceMap(state.game.fen());
+  let promotion="q";
+  if(isPawnPromo(from,to,pm))
+    promotion=await showPromoDialog(state.game.turn());
+  const move=state.game.move({from,to,promotion});
+  if(!move) return false;
+  state.lastFrom=from; state.lastTo=to;
+  state.selected=""; state.legalTargets=[];
   renderBoard();
-
-  if (state.playMode && !isGameOver() && state.game.turn() === engineColor()) {
+  if(state.playMode&&!isGameOver()&&state.game.turn()===engineColor())
     requestSearch(false);
-  }
   return true;
 }
 
-/* ═══════════════════════════════════════════
-   EVAL / PV
-═══════════════════════════════════════════ */
-function formatStats() {
-  const s = state.stats;
-  ui.statsText.textContent =
-    "Depth: " + s.depth + " | Sel: " + s.seldepth +
-    " | Nodes: " + s.nodes + " | NPS: " + s.nps +
-    " | Time: " + s.time + " | Hashfull: " + s.hashfull;
-  ui.acplText.textContent = "ACPL: " + s.acpl;
+/* ═══════════════ EVAL / PV ═══════════════ */
+function formatStats(){
+  const s=state.stats;
+  ui.statsText.textContent="Depth:"+s.depth+" | Sel:"+s.seldepth+" | Nodes:"+s.nodes+" | NPS:"+s.nps+" | Time:"+s.time+" | Hashfull:"+s.hashfull;
+  ui.acplText.textContent="ACPL: "+s.acpl;
 }
 
-function setEval(scoreType, scoreValue) {
-  if (scoreType === "mate") {
-    ui.evalText.textContent = "Mate: " + scoreValue;
-    ui.evalFill.style.width = (+scoreValue >= 0) ? "100%" : "0%";
+function setEval(type,val){
+  if(type==="mate"){
+    ui.evalText.textContent="Mate: "+val;
+    ui.evalFill.style.width=(+val>=0?"100%":"0%");
     return;
   }
-  const cp = +scoreValue;
-  if (!Number.isFinite(cp)) return;
-  const pct = Math.max(0, Math.min(100, 50 + Math.max(-1200, Math.min(1200, cp)) / 24));
-  ui.evalFill.style.width = pct + "%";
-  ui.evalText.textContent = "Eval: " + (cp / 100).toFixed(2);
+  const cp=+val;
+  if(!Number.isFinite(cp)) return;
+  const pct=Math.max(0,Math.min(100,50+Math.max(-1200,Math.min(1200,cp))/24));
+  ui.evalFill.style.width=pct+"%";
+  ui.evalText.textContent="Eval: "+(cp/100).toFixed(2);
 }
 
-function clearAnalysis() {
+function clearAnalysis(){
   state.pvLines.clear();
-  Object.assign(state.stats, { depth:"-", seldepth:"-", nodes:"-", nps:"-", time:"-", hashfull:"-", acpl:"-" });
-  ui.evalFill.style.width = "50%";
-  ui.evalText.textContent = "Eval: 0.00";
-  ui.pvPanel.textContent = "Belum ada PV.";
+  Object.assign(state.stats,{depth:"-",seldepth:"-",nodes:"-",nps:"-",time:"-",hashfull:"-",acpl:"-"});
+  ui.evalFill.style.width="50%";
+  ui.evalText.textContent="Eval: 0.00";
+  ui.pvPanel.textContent="Belum ada PV.";
   formatStats();
 }
 
-function renderPv() {
-  if (!state.pvLines.size) { ui.pvPanel.textContent = "Belum ada PV."; return; }
-  const lines = [...state.pvLines.keys()].sort((a,b)=>a-b).map(idx => {
-    const row = state.pvLines.get(idx);
-    const score = row.scoreType === "mate" ? ("mate " + row.scoreValue) : ("cp " + row.scoreValue);
-    const wdl = row.wdl ? " | wdl " + row.wdl.join("/") : "";
-    return "#" + idx + " d" + row.depth + " " + score + wdl + " | " + row.pv;
-  });
-  ui.pvPanel.textContent = lines.join("\n");
+function renderPv(){
+  if(!state.pvLines.size){ui.pvPanel.textContent="Belum ada PV.";return;}
+  ui.pvPanel.textContent=[...state.pvLines.keys()].sort((a,b)=>a-b).map(idx=>{
+    const row=state.pvLines.get(idx);
+    const score=row.scoreType==="mate"?"mate "+row.scoreValue:"cp "+row.scoreValue;
+    const wdl=row.wdl?" | wdl "+row.wdl.join("/"):"";
+    return "#"+idx+" d"+row.depth+" "+score+wdl+" | "+row.pv;
+  }).join("\n");
 }
 
-function parseInfo(msg) {
-  const tok = msg.trim().split(/\s+/);
-  if (tok[1] === "string") {
-    if (tok[2] === "acpl")    { state.stats.acpl = tok[3]||"-"; formatStats(); }
-    if (tok[2] === "evalbar") {
-      const v = +tok[3];
-      if (Number.isFinite(v)) ui.evalFill.style.width = Math.max(0,Math.min(100,v)) + "%";
-    }
-    addLog(msg); return;
+function parseInfo(msg){
+  const tok=msg.trim().split(/\s+/);
+  if(tok[1]==="string"){
+    if(tok[2]==="acpl"){state.stats.acpl=tok[3]||"-";formatStats();}
+    if(tok[2]==="evalbar"){const v=+tok[3];if(Number.isFinite(v))ui.evalFill.style.width=Math.max(0,Math.min(100,v))+"%";}
+    addLog(msg);return;
   }
-
   let depth=null,seldepth=null,multipv=1,scoreType="cp",scoreValue=0;
   let nodes=null,nps=null,time=null,hashfull=null,wdl=null,pv="";
-
-  for (let i = 1; i < tok.length; i++) {
-    if (tok[i]==="depth")    depth    = +tok[i+1];
-    if (tok[i]==="seldepth") seldepth = +tok[i+1];
-    if (tok[i]==="multipv")  multipv  = +tok[i+1]||1;
-    if (tok[i]==="score")    { scoreType = tok[i+1]||"cp"; scoreValue = +tok[i+2]; }
-    if (tok[i]==="nodes")    nodes    = +tok[i+1];
-    if (tok[i]==="nps")      nps      = +tok[i+1];
-    if (tok[i]==="time")     time     = +tok[i+1];
-    if (tok[i]==="hashfull") hashfull = +tok[i+1];
-    if (tok[i]==="wdl")      wdl      = [+tok[i+1], +tok[i+2], +tok[i+3]];
-    if (tok[i]==="pv")       { pv = tok.slice(i+1).join(" "); break; }
+  for(let i=1;i<tok.length;i++){
+    if(tok[i]==="depth")    depth=+tok[i+1];
+    if(tok[i]==="seldepth") seldepth=+tok[i+1];
+    if(tok[i]==="multipv")  multipv=+tok[i+1]||1;
+    if(tok[i]==="score")    {scoreType=tok[i+1]||"cp";scoreValue=+tok[i+2];}
+    if(tok[i]==="nodes")    nodes=+tok[i+1];
+    if(tok[i]==="nps")      nps=+tok[i+1];
+    if(tok[i]==="time")     time=+tok[i+1];
+    if(tok[i]==="hashfull") hashfull=+tok[i+1];
+    if(tok[i]==="wdl")      wdl=[+tok[i+1],+tok[i+2],+tok[i+3]];
+    if(tok[i]==="pv")       {pv=tok.slice(i+1).join(" ");break;}
   }
-
-  if (depth   !== null) state.stats.depth    = depth;
-  if (seldepth!== null) state.stats.seldepth = seldepth;
-  if (nodes   !== null) state.stats.nodes    = nodes;
-  if (nps     !== null) state.stats.nps      = nps;
-  if (time    !== null) state.stats.time     = time;
-  if (hashfull!== null) state.stats.hashfull = hashfull;
+  if(depth!==null)    state.stats.depth=depth;
+  if(seldepth!==null) state.stats.seldepth=seldepth;
+  if(nodes!==null)    state.stats.nodes=nodes;
+  if(nps!==null)      state.stats.nps=nps;
+  if(time!==null)     state.stats.time=time;
+  if(hashfull!==null) state.stats.hashfull=hashfull;
   formatStats();
-
-  if (pv) {
-    state.pvLines.set(multipv, { depth: depth??"-", scoreType, scoreValue, wdl, pv });
+  if(pv){
+    state.pvLines.set(multipv,{depth:depth??"-",scoreType,scoreValue,wdl,pv});
     renderPv();
-    if (multipv === 1) setEval(scoreType, scoreValue);
+    if(multipv===1) setEval(scoreType,scoreValue);
   }
   addLog(msg);
 }
 
-/* ═══════════════════════════════════════════
-   ENGINE
-═══════════════════════════════════════════ */
-function applyOptions() {
-  if (!state.worker || !state.engineReady) return;
-  const set = (n, v) => state.worker.postMessage("setoption name " + n + " value " + v);
-  set("Strength Preset",  ui.strengthInput.value);
-  set("Skill Level",      Math.max(0,Math.min(20,+ui.skillInput.value||20)));
-  set("MultiPV",          Math.max(1,Math.min(12,+ui.multiPVInput.value||1)));
-  set("PVFormat",         ui.pvFormatInput.value === "san" ? "san" : "uci");
-  set("Hash",             Math.max(1,Math.min(1024,+ui.hashInput.value||64)));
-  set("Move Overhead",    Math.max(0,Math.min(5000,+ui.overheadInput.value||30)));
-  set("UCI_ShowWDL",      ui.showWdlInput.checked ? "true" : "false");
-  set("UCI_ShowACPL",     ui.showAcplInput.checked ? "true" : "false");
-  set("Ponder",           ui.ponderInput.checked ? "true" : "false");
-  set("Queen Safety",     ui.queenSafetyInput.value);
+/* ═══════════════ ENGINE ═══════════════ */
+function applyOptions(){
+  if(!state.worker||!state.engineReady) return;
+  const set=(n,v)=>state.worker.postMessage("setoption name "+n+" value "+v);
+  set("Strength Preset", ui.strengthInput.value);
+  set("Skill Level",     Math.max(0,Math.min(20,+ui.skillInput.value||20)));
+  set("MultiPV",         Math.max(1,Math.min(12,+ui.multiPVInput.value||1)));
+  set("PVFormat",        ui.pvFormatInput.value==="san"?"san":"uci");
+  set("Hash",            Math.max(1,Math.min(1024,+ui.hashInput.value||64)));
+  set("Move Overhead",   Math.max(0,Math.min(5000,+ui.overheadInput.value||30)));
+  set("UCI_ShowWDL",     ui.showWdlInput.checked?"true":"false");
+  set("UCI_ShowACPL",    ui.showAcplInput.checked?"true":"false");
+  set("Ponder",          ui.ponderInput.checked?"true":"false");
+  set("Queen Safety",    ui.queenSafetyInput.value);
   addLog("info string options applied");
 }
 
-function sendPosition() {
-  if (!state.worker) return;
-  state.worker.postMessage("position fen " + state.game.fen());
+function sendPosition(){
+  if(!state.worker) return;
+  state.worker.postMessage("position fen "+state.game.fen());
 }
 
-function requestSearch(analyzeOnly) {
-  if (!state.worker || !state.engineReady || state.thinking || isGameOver()) return;
-  state.thinking = true;
-  state.playMode = !analyzeOnly;
-  state.selected = ""; state.legalTargets = [];
-  clearAnalysis();
-  applyOptions();
-  sendPosition();
-  const depth    = Math.max(1,  Math.min(40,     +ui.depthInput.value    || 6));
-  const moveTime = Math.max(50, Math.min(120000, +ui.moveTimeInput.value  || 1200));
-  const multiPV  = Math.max(1,  Math.min(12,    +ui.multiPVInput.value   || 1));
-  state.worker.postMessage("go depth " + depth + " movetime " + moveTime + " multipv " + multiPV);
-  setStatus(analyzeOnly ? "analyzing…" : "thinking…");
+function requestSearch(analyzeOnly){
+  if(!state.worker||!state.engineReady||state.thinking||isGameOver()) return;
+  state.thinking=true; state.playMode=!analyzeOnly;
+  state.selected=""; state.legalTargets=[];
+  clearAnalysis(); applyOptions(); sendPosition();
+  const depth   =Math.max(1, Math.min(40,    +ui.depthInput.value   ||6));
+  const moveTime=Math.max(50,Math.min(120000,+ui.moveTimeInput.value ||1200));
+  const multiPV =Math.max(1, Math.min(12,    +ui.multiPVInput.value  ||1));
+  state.worker.postMessage("go depth "+depth+" movetime "+moveTime+" multipv "+multiPV);
+  setStatus(analyzeOnly?"analyzing…":"thinking…");
 }
 
-function stopSearch() {
-  if (!state.worker) return;
+function stopSearch(){
+  if(!state.worker) return;
   state.worker.postMessage("stop");
-  state.thinking = false;
-  setStatus("stopped");
+  state.thinking=false; setStatus("stopped");
 }
 
-function applyBestMove(uci) {
-  if (!uci || uci === "0000") return;
-  const from  = uci.slice(0, 2);
-  const to    = uci.slice(2, 4);
-  const promo = uci[4] || "q";
-  const moved = state.game.move({ from, to, promotion: promo });
-  if (moved) {
-    state.lastFrom = from;
-    state.lastTo   = to;
-    renderBoard();
-  }
+function applyBestMove(uci){
+  if(!uci||uci==="0000") return;
+  const from=uci.slice(0,2),to=uci.slice(2,4),promo=uci[4]||"q";
+  const moved=state.game.move({from,to,promotion:promo});
+  if(moved){state.lastFrom=from;state.lastTo=to;renderBoard();}
 }
 
-function initWorker() {
-  state.worker = new Worker("engine.js");
-
-  state.worker.onmessage = e => {
-    const msg = String(e.data || "").trim();
-    if (!msg) return;
-
-    if (msg === "readyok") {
-      state.engineReady = true;
-      setStatus("ready");
-      applyOptions();
-      return;
+function initWorker(){
+  state.worker=new Worker("engine.js");
+  state.worker.onmessage=e=>{
+    const msg=String(e.data||"").trim(); if(!msg) return;
+    if(msg==="readyok"){state.engineReady=true;setStatus("ready");applyOptions();return;}
+    if(msg.startsWith("bestmove")){
+      state.thinking=false; setStatus("ready");
+      const tok=msg.split(/\s+/);
+      const bm=tok[1]||"0000";
+      const pi=tok.indexOf("ponder");
+      const pon=pi>=0?tok[pi+1]||"":"";
+      ui.bestmoveText.textContent="Bestmove: "+bm+(pon?" | Ponder: "+pon:"");
+      if(state.playMode&&state.game.turn()===engineColor()) applyBestMove(bm);
+      addLog(msg); return;
     }
-
-    if (msg.startsWith("bestmove")) {
-      state.thinking = false;
-      setStatus("ready");
-      const tok = msg.split(/\s+/);
-      const bm  = tok[1] || "0000";
-      const pi  = tok.indexOf("ponder");
-      const pon = pi >= 0 ? tok[pi+1] || "" : "";
-      ui.bestmoveText.textContent = "Bestmove: " + bm + (pon ? " | Ponder: " + pon : "");
-      if (state.playMode && state.game.turn() === engineColor()) applyBestMove(bm);
-      addLog(msg);
-      return;
-    }
-
-    if (msg.startsWith("info ")) { parseInfo(msg); return; }
+    if(msg.startsWith("info ")) {parseInfo(msg);return;}
     addLog(msg);
   };
-
-  state.worker.onerror = err => {
+  state.worker.onerror=err=>{
     setStatus("engine error");
-    addLog("worker error: " + (err && err.message ? err.message : String(err)));
+    addLog("worker error: "+(err&&err.message?err.message:String(err)));
   };
-
   state.worker.postMessage("uci");
   state.worker.postMessage("isready");
 }
 
-/* ═══════════════════════════════════════════
-   CONTROLS
-═══════════════════════════════════════════ */
-async function copyText(text) {
-  try { await navigator.clipboard.writeText(text); setStatus("copied"); }
-  catch (_) { setStatus("clipboard blocked"); }
+/* ═══════════════ CONTROLS ═══════════════ */
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);setStatus("copied");}
+  catch(_){setStatus("clipboard blocked");}
 }
 
-function bindControls() {
-  document.getElementById("newBtn").onclick = () => {
-    stopSearch();
-    state.game.reset();
-    state.lastFrom = ""; state.lastTo = "";
-    state.playMode = true;
-    clearAnalysis();
-    state.selected = ""; state.legalTargets = [];
+function bindControls(){
+  document.getElementById("newBtn").onclick=()=>{
+    stopSearch(); state.game.reset();
+    state.lastFrom="";state.lastTo="";state.playMode=true;
+    clearAnalysis();state.selected="";state.legalTargets=[];
     renderBoard();
-    if (state.worker) state.worker.postMessage("ucinewgame");
-    if (state.game.turn() === engineColor()) requestSearch(false);
+    if(state.worker) state.worker.postMessage("ucinewgame");
+    if(state.game.turn()===engineColor()) requestSearch(false);
   };
-
-  document.getElementById("playBtn").onclick = () => {
-    state.playMode = true;
-    setStatus("play mode");
-    if (!state.thinking && state.game.turn() === engineColor()) requestSearch(false);
+  document.getElementById("playBtn").onclick=()=>{
+    state.playMode=true;setStatus("play mode");
+    if(!state.thinking&&state.game.turn()===engineColor()) requestSearch(false);
   };
-
-  document.getElementById("analyzeBtn").onclick = () => requestSearch(true);
-  document.getElementById("stopBtn").onclick    = () => stopSearch();
-
-  document.getElementById("undoBtn").onclick = () => {
+  document.getElementById("analyzeBtn").onclick=()=>requestSearch(true);
+  document.getElementById("stopBtn").onclick=()=>stopSearch();
+  document.getElementById("undoBtn").onclick=()=>{
+    stopSearch(); state.game.undo();
+    if(state.playMode) state.game.undo();
+    const h=state.game.history({verbose:true});
+    const last=h[h.length-1];
+    state.lastFrom=last?last.from:""; state.lastTo=last?last.to:"";
+    state.selected="";state.legalTargets=[];renderBoard();
+  };
+  document.getElementById("flipBtn").onclick=()=>{
+    state.boardFlipped=!state.boardFlipped; buildBoard();
+  };
+  document.getElementById("sideBtn").onclick=()=>{
     stopSearch();
-    state.game.undo();
-    if (state.playMode) state.game.undo();
-    const h = state.game.history({ verbose: true });
-    const last = h[h.length - 1];
-    state.lastFrom = last ? last.from : "";
-    state.lastTo   = last ? last.to   : "";
-    state.selected = ""; state.legalTargets = [];
-    renderBoard();
-  };
-
-  document.getElementById("flipBtn").onclick = () => {
-    state.boardFlipped = !state.boardFlipped;
+    state.humanColor=state.humanColor==="w"?"b":"w";
+    state.boardFlipped=state.humanColor==="b";
+    state.game.reset();state.lastFrom="";state.lastTo="";
+    clearAnalysis();state.selected="";state.legalTargets=[];
     buildBoard();
+    if(state.worker) state.worker.postMessage("ucinewgame");
+    if(state.game.turn()===engineColor()) requestSearch(false);
   };
-
-  document.getElementById("sideBtn").onclick = () => {
-    stopSearch();
-    state.humanColor = state.humanColor === "w" ? "b" : "w";
-    state.boardFlipped = state.humanColor === "b";
-    state.game.reset();
-    state.lastFrom = ""; state.lastTo = "";
-    clearAnalysis();
-    state.selected = ""; state.legalTargets = [];
-    buildBoard();
-    if (state.worker) state.worker.postMessage("ucinewgame");
-    if (state.game.turn() === engineColor()) requestSearch(false);
-  };
-
-  document.getElementById("applyBtn").onclick    = () => applyOptions();
-  document.getElementById("clearHashBtn").onclick = () => {
-    if (!state.worker || !state.engineReady) return;
+  document.getElementById("applyBtn").onclick=()=>applyOptions();
+  document.getElementById("clearHashBtn").onclick=()=>{
+    if(!state.worker||!state.engineReady) return;
     state.worker.postMessage("setoption name Clear Hash");
     addLog("info string hash cleared");
   };
-
-  document.getElementById("loadFenBtn").onclick = () => {
+  document.getElementById("loadFenBtn").onclick=()=>{
     stopSearch();
-    const fen = ui.fenInput.value.trim();
-    if (!state.game.load(fen)) { setStatus("invalid FEN"); addLog("info string invalid FEN"); return; }
-    state.lastFrom = ""; state.lastTo = "";
-    state.selected = ""; state.legalTargets = [];
-    clearAnalysis();
-    renderBoard();
-    setStatus("fen loaded");
+    const fen=ui.fenInput.value.trim();
+    if(!state.game.load(fen)){setStatus("invalid FEN");addLog("info string invalid FEN");return;}
+    state.lastFrom="";state.lastTo="";state.selected="";state.legalTargets=[];
+    clearAnalysis();renderBoard();setStatus("fen loaded");
   };
-
-  document.getElementById("copyFenBtn").onclick = () => copyText(state.game.fen());
-  document.getElementById("copyPgnBtn").onclick = () => copyText(state.game.pgn());
+  document.getElementById("copyFenBtn").onclick=()=>copyText(state.game.fen());
+  document.getElementById("copyPgnBtn").onclick=()=>copyText(state.game.pgn());
 }
 
-/* ═══════════════════════════════════════════
-   BOOT
-═══════════════════════════════════════════ */
-function boot() {
-  if (typeof Chess !== "function") { setStatus("chess.js gagal dimuat"); return; }
-  state.game = new Chess();
-  buildBoard();
-  clearAnalysis();
-  bindControls();
-  initWorker();
+/* ═══════════════ BOOT ═══════════════ */
+function boot(){
+  if(typeof Chess!=="function"){setStatus("chess.js gagal dimuat");return;}
+  state.game=new Chess();
+  buildBoard(); clearAnalysis(); bindControls(); initWorker();
 }
-
-document.addEventListener("DOMContentLoaded", boot);
+document.addEventListener("DOMContentLoaded",boot);
 </script>
 </body>
 </html>
