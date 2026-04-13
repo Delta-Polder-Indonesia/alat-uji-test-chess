@@ -7,6 +7,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.1.0/chess.min.js"></script>
   <style>
+    body {
+      overflow-x: hidden;
+    }
+
     .mono-num {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-variant-numeric: tabular-nums;
@@ -282,7 +286,7 @@
     <p class="text-sm text-neutral-400">Board profesional, piece SVG lokal, panel stabil untuk test PV, MultiPV, ACPL, WDL.</p>
   </header>
 
-  <section class="grid gap-4 lg:grid-cols-[520px_1fr]">
+  <section class="grid gap-4 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)]">
     <div>
       <div class="rounded-xl bg-[#262421] p-3 ring-1 ring-neutral-700">
         <div id="boardWrap">
@@ -301,7 +305,7 @@
       </div>
     </div>
 
-    <div class="space-y-4">
+    <div class="min-w-0 space-y-4">
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Kontrol</h2>
         <div class="flex flex-wrap gap-2">
@@ -374,14 +378,14 @@
       </section>
 
       <section class="grid gap-4 xl:grid-cols-2">
-        <div class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
+        <div class="min-w-0 rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
           <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">PV / MultiPV</h2>
-          <pre id="pvPanel" class="h-52 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Belum ada PV.</pre>
+          <pre id="pvPanel" class="h-52 overflow-auto whitespace-pre-wrap break-words rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Belum ada PV.</pre>
           <p id="statsText" class="mt-2 text-xs mono-num text-neutral-400">Depth: - | Sel: - | Nodes: - | NPS: - | Time: - | Hashfull: -</p>
         </div>
-        <div class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
+        <div class="min-w-0 rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
           <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Move History</h2>
-          <pre id="historyPanel" class="h-52 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">-</pre>
+          <pre id="historyPanel" class="h-52 overflow-auto whitespace-pre-wrap break-words rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">-</pre>
         </div>
       </section>
 
@@ -397,7 +401,7 @@
 
       <section class="rounded-xl bg-neutral-900 p-3 ring-1 ring-neutral-700">
         <h2 class="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-400">Engine Log</h2>
-        <pre id="logPanel" class="h-40 overflow-auto rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Menunggu output engine...</pre>
+        <pre id="logPanel" class="h-40 overflow-auto whitespace-pre-wrap break-words rounded bg-neutral-950 p-3 text-xs mono-num ring-1 ring-neutral-700">Menunggu output engine...</pre>
       </section>
     </div>
   </section>
